@@ -1,0 +1,804 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Inu Studio Web — Páginas web que venden</title>
+<meta name="description" content="Diseñamos páginas web que atraen clientes y generan ventas para tu restaurante, tienda o negocio de servicios.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --black:#070707;
+    --black-soft:#0f1210;
+    --panel:#131613;
+    --panel-border:rgba(57,255,20,.18);
+    --neon:#39ff14;
+    --neon-dim:#22c40e;
+    --gold:#e8c14d;
+    --gold-dim:#b8952f;
+    --white:#f4f6f3;
+    --grey:#a7ada6;
+    --radius:16px;
+  }
+  *{margin:0;padding:0;box-sizing:border-box;}
+  html{scroll-behavior:smooth;}
+  body{
+    background:var(--black);
+    color:var(--white);
+    font-family:'Inter',sans-serif;
+    line-height:1.6;
+    overflow-x:hidden;
+  }
+  h1,h2,h3,h4{font-family:'Space Grotesk',sans-serif;font-weight:700;line-height:1.15;}
+  a{color:inherit;text-decoration:none;}
+  img{max-width:100%;display:block;}
+  .container{max-width:1160px;margin:0 auto;padding:0 20px;}
+  .eyebrow{
+    display:inline-block;
+    font-size:.75rem;
+    letter-spacing:.14em;
+    text-transform:uppercase;
+    color:var(--neon);
+    font-weight:600;
+    margin-bottom:14px;
+  }
+  .btn{
+    position:relative;
+    display:inline-flex;
+    align-items:center;
+    gap:8px;
+    padding:15px 28px;
+    border-radius:999px;
+    font-weight:600;
+    font-size:.98rem;
+    cursor:pointer;
+    border:none;
+    transition:transform .18s ease, box-shadow .18s ease, background .18s ease;
+    white-space:nowrap;
+  }
+
+  /* HUELLITAS + GLOW AL CLICK */
+  .paw-walk{
+    position:fixed;
+    width:20px;height:20px;
+    color:var(--neon);
+    filter:drop-shadow(0 0 6px rgba(57,255,20,.85));
+    opacity:0;pointer-events:none;z-index:999;
+    animation:pawWalk .9s ease forwards;
+  }
+  @keyframes pawWalk{
+    0%{opacity:0;transform:scale(.5);}
+    20%{opacity:1;transform:scale(1);}
+    100%{opacity:0;transform:translate(38px,-16px) scale(.85);}
+  }
+  .btn-glow-ring{
+    position:absolute;inset:-4px;border-radius:inherit;
+    border:2px solid var(--neon);
+    box-shadow:0 0 16px rgba(57,255,20,.9), 0 0 34px rgba(57,255,20,.5);
+    opacity:1;pointer-events:none;z-index:2;
+    animation:btnGlowPulse .55s ease-out forwards;
+  }
+  @keyframes btnGlowPulse{
+    0%{opacity:1;transform:scale(1);}
+    100%{opacity:0;transform:scale(1.16);}
+  }
+  .btn-primary{
+    background:var(--neon);
+    color:#06130a;
+    box-shadow:0 0 0 rgba(57,255,20,0), 0 6px 24px rgba(57,255,20,.25);
+  }
+  .btn-primary:hover{transform:translateY(-2px);box-shadow:0 10px 30px rgba(57,255,20,.4);}
+  .btn-outline{
+    background:transparent;
+    color:var(--white);
+    border:1.5px solid rgba(232,193,77,.55);
+  }
+  .btn-outline:hover{border-color:var(--gold);background:rgba(232,193,77,.08);transform:translateY(-2px);}
+
+  /* NAV */
+  nav{
+    position:sticky;top:0;z-index:100;
+    background:rgba(7,7,7,.85);
+    backdrop-filter:blur(10px);
+    border-bottom:1px solid rgba(255,255,255,.06);
+  }
+  nav .container{
+    display:flex;align-items:center;justify-content:space-between;
+    height:72px;
+  }
+  .logo{
+    font-family:'Space Grotesk',sans-serif;
+    font-weight:700;font-size:1.25rem;
+    display:flex;align-items:center;gap:8px;
+  }
+  .logo span{color:var(--neon);}
+  .nav-links{display:flex;gap:32px;font-size:.92rem;font-weight:500;color:var(--grey);}
+  .nav-links a:hover{color:var(--white);}
+  .nav-cta{display:flex;align-items:center;gap:18px;}
+  .nav-toggle{display:none;background:none;border:none;color:var(--white);font-size:1.6rem;cursor:pointer;}
+  @media(max-width:860px){
+    .nav-links{display:none;}
+    .nav-toggle{display:block;}
+  }
+
+  /* HERO */
+  .hero{
+    position:relative;
+    padding:110px 0 90px;
+    background:
+      radial-gradient(circle at 15% 20%, rgba(57,255,20,.10), transparent 45%),
+      radial-gradient(circle at 85% 10%, rgba(232,193,77,.10), transparent 40%),
+      var(--black);
+    overflow:hidden;
+  }
+  .hero::before{
+    content:"";
+    position:absolute;inset:0;
+    background-image:
+      linear-gradient(rgba(255,255,255,.035) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(255,255,255,.035) 1px, transparent 1px);
+    background-size:42px 42px;
+    mask-image:radial-gradient(ellipse at center, black 0%, transparent 72%);
+    pointer-events:none;
+  }
+  .hero-grid{
+    position:relative;z-index:1;
+    display:grid;grid-template-columns:1.15fr .85fr;gap:36px;align-items:center;
+  }
+  .hero-text{text-align:left;}
+  .hero h1{
+    font-size:clamp(2.1rem, 4.6vw, 3.15rem);
+    margin-bottom:22px;
+  }
+  .hero h1 .accent{color:var(--neon);text-shadow:0 0 22px rgba(57,255,20,.45);}
+  .hero p.sub{
+    font-size:clamp(1.02rem,2vw,1.2rem);
+    color:var(--grey);
+    max-width:560px;
+    margin:0 0 38px;
+  }
+  .hero-ctas{display:flex;gap:16px;justify-content:flex-start;flex-wrap:wrap;margin-bottom:46px;}
+  .hero-stats{
+    display:flex;gap:34px;justify-content:flex-start;flex-wrap:wrap;
+    font-size:.85rem;color:var(--grey);
+  }
+  .hero-stats b{display:block;color:var(--gold);font-family:'Space Grotesk',sans-serif;font-size:1.3rem;}
+  .hero-mascot{
+    position:relative;display:flex;align-items:flex-end;justify-content:center;
+    min-height:280px;
+  }
+  .hero-mascot::before{
+    content:"";position:absolute;
+    width:78%;height:78%;left:50%;top:52%;transform:translate(-50%,-50%);
+    background:radial-gradient(circle, rgba(57,255,20,.30), rgba(57,255,20,.08) 55%, transparent 72%);
+    filter:blur(30px);z-index:0;
+  }
+  .hero-mascot img{
+    position:relative;z-index:1;
+    width:100%;max-width:400px;
+    filter:
+      drop-shadow(0 0 5px rgba(57,255,20,.95))
+      drop-shadow(0 0 14px rgba(57,255,20,.75))
+      drop-shadow(0 0 32px rgba(57,255,20,.45))
+      drop-shadow(0 0 56px rgba(57,255,20,.25));
+  }
+  @media(max-width:900px){
+    .hero-grid{grid-template-columns:1fr;}
+    .hero-text{text-align:center;}
+    .hero-ctas,.hero-stats{justify-content:center;}
+    .hero p.sub{margin-left:auto;margin-right:auto;}
+    .hero-mascot{min-height:auto;margin-top:10px;}
+    .hero-mascot img{max-width:260px;}
+  }
+
+  /* SECTION GENERIC */
+  section{padding:90px 0;}
+  .section-head{max-width:640px;margin:0 auto 52px;text-align:center;}
+  .section-head h2{font-size:clamp(1.7rem,3.4vw,2.4rem);margin-bottom:14px;}
+  .section-head p{color:var(--grey);font-size:1.02rem;}
+  .section-alt{background:var(--black-soft);}
+
+  /* SEGMENTATION CARDS */
+  .segments{
+    display:grid;grid-template-columns:repeat(3,1fr);gap:24px;
+  }
+  @media(max-width:900px){.segments{grid-template-columns:1fr;}}
+  .seg-card{
+    background:var(--panel);
+    border:1px solid var(--panel-border);
+    border-radius:var(--radius);
+    padding:32px 26px;
+    transition:transform .2s ease, border-color .2s ease;
+  }
+  .seg-card:hover{transform:translateY(-6px);border-color:var(--neon);}
+  .seg-icon{font-size:2.2rem;margin-bottom:16px;display:block;}
+  .seg-card h3{font-size:1.2rem;margin-bottom:10px;color:var(--white);}
+  .seg-card p{color:var(--grey);font-size:.95rem;}
+  .seg-card .tag{
+    display:inline-block;margin-top:16px;font-size:.75rem;
+    color:var(--gold);font-weight:600;letter-spacing:.05em;text-transform:uppercase;
+  }
+
+  /* PORTFOLIO */
+  .portfolio-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:24px;}
+  @media(max-width:900px){.portfolio-grid{grid-template-columns:1fr;}}
+  .port-card{
+    background:linear-gradient(160deg, var(--panel), #0b0d0b);
+    border:1px solid var(--panel-border);
+    border-radius:var(--radius);
+    overflow:hidden;
+    display:flex;flex-direction:column;
+  }
+  .port-thumb{
+    height:170px;
+    display:flex;align-items:center;justify-content:center;
+    font-family:'Space Grotesk',sans-serif;font-weight:700;font-size:1.4rem;
+    position:relative;
+  }
+  .port-thumb.sushi{background:linear-gradient(135deg,#111,#1c2a1a);color:var(--neon);}
+  .port-thumb.burger{background:linear-gradient(135deg,#1a1005,#241505);color:var(--gold);}
+  .port-thumb.mushi{background:linear-gradient(135deg,#0a1a14,#0b0f0c);color:#7fe0c4;}
+  .port-body{padding:22px 22px 26px;flex:1;display:flex;flex-direction:column;}
+  .port-body h4{font-size:1.05rem;margin-bottom:8px;}
+  .port-body p{color:var(--grey);font-size:.9rem;flex:1;margin-bottom:14px;}
+  .port-body ul{list-style:none;margin-bottom:16px;}
+  .port-body li{
+    font-size:.83rem;color:var(--grey);padding-left:18px;position:relative;margin-bottom:5px;
+  }
+  .port-body li::before{content:"✓";position:absolute;left:0;color:var(--neon);}
+  .port-link{font-size:.85rem;font-weight:600;color:var(--gold);}
+  .port-link:hover{color:var(--neon);}
+
+  .trust-note{
+    text-align:center;margin-top:36px;color:var(--grey);font-size:.85rem;
+    max-width:560px;margin-left:auto;margin-right:auto;
+  }
+
+  /* COMO FUNCIONA */
+  .steps{
+    display:grid;grid-template-columns:repeat(4,1fr);gap:24px;
+    position:relative;
+  }
+  .steps::before{
+    content:"";position:absolute;top:24px;left:12%;right:12%;height:2px;
+    background:linear-gradient(90deg, transparent, rgba(57,255,20,.4), rgba(232,193,77,.3), rgba(57,255,20,.4), transparent);
+    z-index:0;
+  }
+  @media(max-width:860px){.steps{grid-template-columns:1fr 1fr;}.steps::before{display:none;}}
+  @media(max-width:560px){.steps{grid-template-columns:1fr;}}
+  .step{position:relative;z-index:1;text-align:center;}
+  .step-num{
+    width:48px;height:48px;border-radius:50%;
+    background:rgba(57,255,20,.1);border:1.5px solid var(--neon);color:var(--neon);
+    display:flex;align-items:center;justify-content:center;
+    font-family:'Space Grotesk',sans-serif;font-weight:700;font-size:1.1rem;
+    margin:0 auto 16px;background-color:var(--black);
+  }
+  .step h4{font-size:1.02rem;margin-bottom:8px;}
+  .step p{font-size:.87rem;color:var(--grey);}
+
+  /* VALUE PROPS */
+  .values{display:grid;grid-template-columns:repeat(4,1fr);gap:22px;}
+  @media(max-width:900px){.values{grid-template-columns:repeat(2,1fr);}}
+  @media(max-width:560px){.values{grid-template-columns:1fr;}}
+  .value-card{
+    padding:26px 20px;border-radius:var(--radius);
+    background:var(--panel);border:1px solid rgba(255,255,255,.06);
+    text-align:center;
+  }
+  .value-icon{
+    width:52px;height:52px;border-radius:50%;
+    background:rgba(57,255,20,.1);border:1px solid rgba(57,255,20,.3);
+    display:flex;align-items:center;justify-content:center;
+    margin:0 auto 16px;font-size:1.4rem;
+  }
+  .value-card h4{font-size:1rem;margin-bottom:8px;}
+  .value-card p{font-size:.87rem;color:var(--grey);}
+
+  /* PRICING */
+  .pricing-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:24px;}
+  @media(max-width:900px){.pricing-grid{grid-template-columns:1fr;}}
+  .price-card{
+    background:var(--panel);border:1px solid rgba(255,255,255,.08);
+    border-radius:var(--radius);padding:34px 28px;display:flex;flex-direction:column;
+    position:relative;
+  }
+  .price-card.featured{border-color:var(--neon);box-shadow:0 0 40px rgba(57,255,20,.12);}
+  .price-card.featured .badge{
+    position:absolute;top:-13px;left:50%;transform:translateX(-50%);
+    background:var(--neon);color:#06130a;font-size:.72rem;font-weight:700;
+    padding:5px 14px;border-radius:999px;letter-spacing:.05em;text-transform:uppercase;
+  }
+  .price-card h3{font-size:1.15rem;margin-bottom:6px;}
+  .price-card .desde{color:var(--grey);font-size:.82rem;margin-bottom:4px;}
+  .price-card .amount{
+    font-family:'Space Grotesk',sans-serif;font-size:2.1rem;font-weight:700;color:var(--gold);
+    margin-bottom:18px;
+  }
+  .price-card .amount span{font-size:1rem;color:var(--grey);font-weight:500;}
+  .price-card ul{list-style:none;margin-bottom:26px;flex:1;}
+  .price-card li{font-size:.88rem;color:var(--grey);padding-left:20px;position:relative;margin-bottom:10px;}
+  .price-card li::before{content:"✓";position:absolute;left:0;color:var(--neon);font-weight:700;}
+  .price-note{text-align:center;color:var(--grey);font-size:.85rem;margin-top:30px;}
+
+  /* FAQ */
+  .faq-list{max-width:760px;margin:0 auto;}
+  .faq-item{
+    border-bottom:1px solid rgba(255,255,255,.08);
+    padding:22px 0;
+  }
+  .faq-q{
+    display:flex;justify-content:space-between;align-items:center;
+    cursor:pointer;font-weight:600;font-size:1.02rem;gap:20px;
+  }
+  .faq-q .icon{color:var(--neon);font-size:1.3rem;transition:transform .25s ease;flex-shrink:0;}
+  .faq-item.open .faq-q .icon{transform:rotate(45deg);}
+  .faq-a{
+    max-height:0;overflow:hidden;color:var(--grey);font-size:.93rem;
+    transition:max-height .3s ease, margin-top .3s ease;
+  }
+  .faq-item.open .faq-a{max-height:220px;margin-top:14px;}
+
+  /* CONTACT */
+  .contact-wrap{
+    display:grid;grid-template-columns:1fr 1fr;gap:50px;align-items:center;
+  }
+  @media(max-width:860px){.contact-wrap{grid-template-columns:1fr;}}
+  .contact-left h2{font-size:clamp(1.6rem,3vw,2.2rem);margin-bottom:16px;}
+  .contact-left p{color:var(--grey);margin-bottom:26px;}
+  .contact-perks{list-style:none;}
+  .contact-perks li{
+    display:flex;align-items:center;gap:10px;margin-bottom:12px;color:var(--grey);font-size:.92rem;
+  }
+  .contact-perks li::before{content:"●";color:var(--gold);font-size:.6rem;}
+  form.contact-form{
+    background:var(--panel);border:1px solid rgba(255,255,255,.08);
+    border-radius:var(--radius);padding:32px;
+  }
+  .form-row{margin-bottom:18px;}
+  .form-row label{display:block;font-size:.82rem;color:var(--grey);margin-bottom:7px;font-weight:500;}
+  .form-row input,.form-row select{
+    width:100%;padding:13px 14px;border-radius:10px;
+    background:#0c0e0c;border:1px solid rgba(255,255,255,.12);
+    color:var(--white);font-size:.95rem;font-family:'Inter',sans-serif;
+  }
+  .form-row input:focus,.form-row select:focus{outline:none;border-color:var(--neon);}
+  form.contact-form .btn{width:100%;justify-content:center;margin-top:6px;}
+
+  /* FOOTER */
+  footer{
+    padding:40px 0;border-top:1px solid rgba(255,255,255,.06);
+    text-align:center;color:var(--grey);font-size:.85rem;
+  }
+  footer .logo{justify-content:center;margin-bottom:10px;}
+
+  /* FLOATING WHATSAPP */
+  .wa-float{
+    position:fixed;bottom:24px;right:24px;z-index:200;
+    width:60px;height:60px;border-radius:50%;
+    background:#25D366;
+    display:flex;align-items:center;justify-content:center;
+    box-shadow:0 6px 22px rgba(37,211,102,.45);
+    animation:pulse 2.4s infinite;
+  }
+  .wa-float svg{width:30px;height:30px;}
+  @keyframes pulse{
+    0%{box-shadow:0 0 0 0 rgba(37,211,102,.55),0 6px 22px rgba(37,211,102,.45);}
+    70%{box-shadow:0 0 0 14px rgba(37,211,102,0),0 6px 22px rgba(37,211,102,.45);}
+    100%{box-shadow:0 0 0 0 rgba(37,211,102,0),0 6px 22px rgba(37,211,102,.45);}
+  }
+
+  /* MOBILE MENU */
+  .mobile-menu{
+    display:none;position:fixed;inset:0;z-index:150;
+    background:rgba(7,7,7,.98);
+    padding:100px 30px 30px;
+  }
+  .mobile-menu.open{display:block;}
+  .mobile-menu a{
+    display:block;padding:16px 0;font-size:1.15rem;font-weight:600;
+    border-bottom:1px solid rgba(255,255,255,.08);color:var(--white);
+  }
+  .mobile-close{
+    position:absolute;top:24px;right:24px;background:none;border:none;
+    color:var(--white);font-size:1.8rem;cursor:pointer;
+  }
+</style>
+</head>
+<body>
+
+<svg width="0" height="0" style="position:absolute" aria-hidden="true"><defs><g id="pawshape"><ellipse cx="35" cy="26" rx="9.5" ry="13" transform="rotate(-22 35 26)"/><ellipse cx="53" cy="18" rx="9" ry="12.5"/><ellipse cx="71" cy="26" rx="9.5" ry="13" transform="rotate(22 71 26)"/><ellipse cx="22" cy="47" rx="8.5" ry="11.5" transform="rotate(-45 22 47)"/><ellipse cx="84" cy="47" rx="8.5" ry="11.5" transform="rotate(45 84 47)"/><path d="M53 38 C68 38 80 50 80 63 C80 78 68 88 53 88 C38 88 26 78 26 63 C26 50 38 38 53 38 Z"/></g></defs></svg>
+
+<nav>
+  <div class="container">
+    <a href="#" class="logo">🐾 Inu Studio <span>Web</span></a>
+    <div class="nav-links">
+      <a href="#servicios">Servicios</a>
+      <a href="#como-funciona">Cómo funciona</a>
+      <a href="#portafolio">Portafolio</a>
+      <a href="#precios">Precios</a>
+      <a href="#faq">Preguntas</a>
+      <a href="#contacto">Contacto</a>
+    </div>
+    <div class="nav-cta">
+      <a href="#contacto" class="btn btn-primary" style="padding:11px 20px;font-size:.88rem;">Cotizar ahora</a>
+      <button class="nav-toggle" id="navToggle">☰</button>
+    </div>
+  </div>
+</nav>
+
+<div class="mobile-menu" id="mobileMenu">
+  <button class="mobile-close" id="mobileClose">✕</button>
+  <a href="#servicios">Servicios</a>
+  <a href="#como-funciona">Cómo funciona</a>
+  <a href="#portafolio">Portafolio</a>
+  <a href="#precios">Precios</a>
+  <a href="#faq">Preguntas</a>
+  <a href="#contacto">Contacto</a>
+</div>
+
+<!-- HERO -->
+<header class="hero">
+  <div class="container">
+    <div class="hero-grid">
+      <div class="hero-text">
+        <span class="eyebrow">Diseño web para negocios locales</span>
+        <h1>Diseñamos páginas web que <span class="accent">atraen clientes</span> y generan ventas para tu restaurante, tienda o negocio de servicios.</h1>
+        <p class="sub">Sitios web rápidos, optimizados para celulares y listos para recibir pedidos, citas o cotizaciones desde el primer día.</p>
+        <div class="hero-ctas">
+          <a href="#contacto" class="btn btn-primary" id="heroWaBtn">Cotizar mi sitio web por WhatsApp</a>
+          <a href="#contacto" class="btn btn-outline">Agendar asesoría gratuita</a>
+        </div>
+        <div class="hero-stats">
+          <div><b>3+</b>sitios en producción</div>
+          <div><b>100%</b>optimizados a celular</div>
+          <div><b>0%</b>comisión por pedido</div>
+        </div>
+      </div>
+      <div class="hero-mascot">
+        <img src="inu-jobs.png" alt="Inu Jobs, mascota de Inu Studio Web" loading="eager">
+      </div>
+    </div>
+  </div>
+</header>
+
+<!-- SEGMENTACION -->
+<section id="servicios">
+  <div class="container">
+    <div class="section-head">
+      <span class="eyebrow">Para tu tipo de negocio</span>
+      <h2>Sé cual es tu giro, y sé qué necesitas</h2>
+      <p>No hay plantillas genéricas. Cada sitio se piensa para cómo tus clientes realmente compran.</p>
+    </div>
+    <div class="segments">
+      <div class="seg-card">
+        <span class="seg-icon">🍕</span>
+        <h3>Restaurantes y Alimentos</h3>
+        <p>Menú digital interactivo, pedidos directos por WhatsApp/Web sin pagar comisiones a apps de delivery y optimización en Google Maps.</p>
+        <span class="tag">Menú + carrito propio</span>
+      </div>
+      <div class="seg-card">
+        <span class="seg-icon">🛍️</span>
+        <h3>Tiendas Físicas y Retail</h3>
+        <p>Catálogo de productos, carrito de compras fácil de usar, integración de cobros (tarjeta/efectivo) y stock sincronizado.</p>
+        <span class="tag">Catálogo + carrito</span>
+      </div>
+      <div class="seg-card">
+        <span class="seg-icon">🛠️</span>
+        <h3>Servicios Profesionales</h3>
+        <p>Páginas de aterrizaje diseñadas para captar leads, agenda de citas integrada y presentación clara de tus servicios.</p>
+        <span class="tag">Leads + agenda</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- COMO FUNCIONA -->
+<section id="como-funciona">
+  <div class="container">
+    <div class="section-head">
+      <span class="eyebrow">Proceso simple</span>
+      <h2>Cómo funciona</h2>
+      <p>De la cotización a tu sitio en vivo, sin vueltas ni letras chiquitas.</p>
+    </div>
+    <div class="steps">
+      <div class="step">
+        <div class="step-num">1</div>
+        <h4>Cotizas</h4>
+        <p>Nos cuentas de tu negocio por WhatsApp, sin compromiso ni formularios eternos.</p>
+      </div>
+      <div class="step">
+        <div class="step-num">2</div>
+        <h4>Diseñamos</h4>
+        <p>Creamos tu sitio a la medida de tu giro: restaurante, tienda o servicios.</p>
+      </div>
+      <div class="step">
+        <div class="step-num">3</div>
+        <h4>Revisas</h4>
+        <p>Ves tu sitio funcionando antes de publicarlo y pides los ajustes que necesites.</p>
+      </div>
+      <div class="step">
+        <div class="step-num">4</div>
+        <h4>Lanzamos</h4>
+        <p>Tu página queda en vivo, lista para vender, y te enseñamos a administrarla tú mismo.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- PORTAFOLIO -->
+<section id="portafolio" class="section-alt">
+  <div class="container">
+    <div class="section-head">
+      <span class="eyebrow">Trabajo real, no maquetas</span>
+      <h2>Sitios que ya están en producción</h2>
+      <p>Estos son proyectos propios, en vivo hoy — puedes navegarlos tal como los navega un cliente real.</p>
+    </div>
+    <div class="portfolio-grid">
+      <div class="port-card">
+        <div class="port-thumb sushi">🍣 Inu Sushi</div>
+        <div class="port-body">
+          <h4>Inu Sushi — Dark Kitchen</h4>
+          <p>Landing de venta directa con menú completo y carrito propio.</p>
+          <ul>
+            <li>Configurador de charolas y bowls</li>
+            <li>Pedido directo por WhatsApp, sin comisión</li>
+            <li>Estimador de envío en tiempo real</li>
+          </ul>
+          <a href="https://inusushi.github.io" target="_blank" rel="noopener" class="port-link">Ver sitio en vivo →</a>
+        </div>
+      </div>
+      <div class="port-card">
+        <div class="port-thumb burger">🍔 Kangreburger</div>
+        <div class="port-body">
+          <h4>Kangreburger — Landing hook</h4>
+          <p>Sub-marca de comida rápida con su propio embudo de venta.</p>
+          <ul>
+            <li>Hero animado enfocado en conversión</li>
+            <li>Mismo carrito y checkout que la marca madre</li>
+            <li>Horario dinámico y días especiales</li>
+          </ul>
+          <a href="https://inusushi.github.io/kangreburger.html" target="_blank" rel="noopener" class="port-link">Ver sitio en vivo →</a>
+        </div>
+      </div>
+      <div class="port-card">
+        <div class="port-thumb mushi">🥟 Mushipan</div>
+        <div class="port-body">
+          <h4>Mushipan — Captación B2B</h4>
+          <p>Landing de servicios enfocada en reclutar distribuidores, no venta directa.</p>
+          <ul>
+            <li>Presentación clara de producto y propuesta</li>
+            <li>Formulario de contacto corto</li>
+            <li>Diseño 100% mobile-first</li>
+          </ul>
+          <a href="https://inusushi.github.io/mushipan.html" target="_blank" rel="noopener" class="port-link">Ver sitio en vivo →</a>
+        </div>
+      </div>
+    </div>
+    <p class="trust-note">Testimonios de clientes próximamente — esta sección se actualizará con casos y cifras reales conforme se recopilen.</p>
+  </div>
+</section>
+
+<!-- VALUE PROPS -->
+<section>
+  <div class="container">
+    <div class="section-head">
+      <span class="eyebrow">¿Por qué elegirnos?</span>
+      <h2>Rápido, tuyo, y sin dejarte solo</h2>
+    </div>
+    <div class="values">
+      <div class="value-card">
+        <div class="value-icon">⚡</div>
+        <h4>Entregas rápidas</h4>
+        <p>Tu página lista y funcionando en pocos días, no meses.</p>
+      </div>
+      <div class="value-card">
+        <div class="value-icon">🔧</div>
+        <h4>100% autoadministrable</h4>
+        <p>Te enseñamos a cambiar precios, fotos y platillos sin depender de un programador.</p>
+      </div>
+      <div class="value-card">
+        <div class="value-icon">📱</div>
+        <h4>Optimizado para móviles</h4>
+        <p>Más del 80% de tus clientes te buscarán desde el celular; garantizamos carga ultrarrápida.</p>
+      </div>
+      <div class="value-card">
+        <div class="value-icon">🤝</div>
+        <h4>Soporte y acompañamiento</h4>
+        <p>No te dejamos solo tras la entrega — seguimos disponibles por WhatsApp.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- PRECIOS -->
+<section id="precios" class="section-alt">
+  <div class="container">
+    <div class="section-head">
+      <span class="eyebrow">Inversión</span>
+      <h2>Paquetes claros, sin sorpresas</h2>
+      <p>Precio final según alcance — esto filtra tiempo perdido y acelera tu cotización.</p>
+    </div>
+    <div class="pricing-grid">
+      <div class="price-card">
+        <h3>Menú Digital</h3>
+        <p class="desde">Ideal para restaurantes y comida</p>
+        <div class="amount">$3,500<span> MXN</span></div>
+        <ul>
+          <li>Menú digital interactivo</li>
+          <li>Pedidos por WhatsApp sin comisión</li>
+          <li>Optimización para Google Maps</li>
+          <li>Diseño mobile-first</li>
+        </ul>
+        <a href="#contacto" class="btn btn-outline">Cotizar este paquete</a>
+      </div>
+      <div class="price-card featured">
+        <span class="badge">Más pedido</span>
+        <h3>Tienda Online</h3>
+        <p class="desde">Ideal para retail y tiendas físicas</p>
+        <div class="amount">$3,500<span> MXN</span></div>
+        <ul>
+          <li>Catálogo de productos</li>
+          <li>Carrito de compras integrado</li>
+          <li>Cobro con tarjeta o efectivo</li>
+          <li>Stock sincronizado</li>
+        </ul>
+        <a href="#contacto" class="btn btn-primary">Cotizar este paquete</a>
+      </div>
+      <div class="price-card">
+        <h3>Servicios</h3>
+        <p class="desde">Ideal para profesionales y consultoría</p>
+        <div class="amount">$3,500<span> MXN</span></div>
+        <ul>
+          <li>Landing enfocada en captar leads</li>
+          <li>Agenda de citas integrada</li>
+          <li>Presentación clara de servicios</li>
+          <li>Formulario de contacto corto</li>
+        </ul>
+        <a href="#contacto" class="btn btn-outline">Cotizar este paquete</a>
+      </div>
+    </div>
+    <p class="price-note">Precios desde $3,500 MXN — el alcance final (número de secciones, integraciones, idiomas) se confirma en tu cotización gratuita por WhatsApp.</p>
+  </div>
+</section>
+
+<!-- FAQ -->
+<section id="faq">
+  <div class="container">
+    <div class="section-head">
+      <span class="eyebrow">Dudas frecuentes</span>
+      <h2>Preguntas frecuentes</h2>
+    </div>
+    <div class="faq-list">
+      <div class="faq-item">
+        <div class="faq-q"><span>¿Incluye dominio y hosting?</span><span class="icon">+</span></div>
+        <div class="faq-a">Te asesoramos en la elección y contratación de tu dominio y hosting; según el paquete, puede incluirse dentro de la cotización. Se confirma el detalle exacto por WhatsApp según tu caso.</div>
+      </div>
+      <div class="faq-item">
+        <div class="faq-q"><span>¿Cuánto tiempo tarda en estar lista?</span><span class="icon">+</span></div>
+        <div class="faq-a">Depende del alcance del proyecto; en la cotización te damos un tiempo estimado claro antes de empezar, sin sorpresas en el camino.</div>
+      </div>
+      <div class="faq-item">
+        <div class="faq-q"><span>¿Puedo actualizar el menú o mis productos yo mismo?</span><span class="icon">+</span></div>
+        <div class="faq-a">Sí. Te dejamos el sitio 100% autoadministrable y te enseñamos a cambiar precios, fotos y productos sin necesidad de un programador.</div>
+      </div>
+      <div class="faq-item">
+        <div class="faq-q"><span>¿Qué métodos de pago aceptan mis clientes en la página?</span><span class="icon">+</span></div>
+        <div class="faq-a">Se define según tu negocio: pedidos directos por WhatsApp, transferencia, efectivo contra entrega o cobro con tarjeta — lo revisamos juntos en tu cotización.</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- CONTACTO -->
+<section id="contacto" class="section-alt">
+  <div class="container contact-wrap">
+    <div class="contact-left">
+      <span class="eyebrow">Último paso</span>
+      <h2>Cuéntanos de tu negocio y te cotizamos hoy</h2>
+      <p>Llena el formulario y te respondemos directo por WhatsApp — sin formularios eternos, sin esperas.</p>
+      <ul class="contact-perks">
+        <li>Respuesta el mismo día</li>
+        <li>Cotización gratuita, sin compromiso</li>
+        <li>Asesoría personalizada según tu giro</li>
+      </ul>
+    </div>
+    <form class="contact-form" id="contactForm">
+      <div class="form-row">
+        <label for="nombre">Nombre</label>
+        <input type="text" id="nombre" required placeholder="Tu nombre">
+      </div>
+      <div class="form-row">
+        <label for="negocio">Nombre de tu negocio</label>
+        <input type="text" id="negocio" required placeholder="Ej. Taquería El Buen Sazón">
+      </div>
+      <div class="form-row">
+        <label for="giro">Giro</label>
+        <select id="giro" required>
+          <option value="" disabled selected>Selecciona una opción</option>
+          <option value="Restaurante">Restaurante / Alimentos</option>
+          <option value="Tienda">Tienda / Retail</option>
+          <option value="Servicios">Servicios Profesionales</option>
+        </select>
+      </div>
+      <div class="form-row">
+        <label for="whatsapp">Tu WhatsApp</label>
+        <input type="tel" id="whatsapp" required placeholder="10 dígitos">
+      </div>
+      <button type="submit" class="btn btn-primary">Enviar y cotizar por WhatsApp</button>
+    </form>
+  </div>
+</section>
+
+<footer>
+  <a href="#" class="logo">🐾 Inu Studio <span>Web</span></a>
+  <p>Páginas web que atraen clientes reales. Cotiza sin compromiso.</p>
+</footer>
+
+<!-- WHATSAPP FLOTANTE -->
+<a href="https://wa.me/525527327414?text=Hola%2C%20quiero%20cotizar%20mi%20sitio%20web" target="_blank" rel="noopener" class="wa-float" aria-label="WhatsApp">
+  <svg viewBox="0 0 32 32" fill="white"><path d="M16.001 3C9.373 3 4 8.373 4 15c0 2.386.7 4.61 1.902 6.48L4 29l7.72-1.874A11.94 11.94 0 0 0 16 27c6.628 0 12-5.373 12-12S22.629 3 16.001 3zm0 21.6c-1.98 0-3.86-.55-5.46-1.51l-.39-.23-4.58 1.11 1.13-4.47-.25-.4A9.56 9.56 0 0 1 6.4 15c0-5.294 4.307-9.6 9.601-9.6S25.6 9.706 25.6 15 21.294 24.6 16.001 24.6zm5.29-7.19c-.29-.145-1.71-.844-1.976-.941-.265-.097-.458-.145-.65.145-.193.29-.747.941-.916 1.135-.169.193-.338.217-.628.072-.29-.145-1.223-.451-2.33-1.437-.861-.768-1.443-1.716-1.612-2.006-.169-.29-.018-.447.127-.591.13-.13.29-.338.435-.507.145-.169.193-.29.29-.483.097-.193.048-.362-.024-.507-.072-.145-.65-1.566-.892-2.145-.235-.564-.474-.487-.65-.496-.169-.008-.362-.01-.554-.01-.193 0-.507.072-.772.362-.265.29-1.01.987-1.01 2.406 0 1.42 1.034 2.79 1.178 2.983.145.193 2.035 3.108 4.93 4.36.689.297 1.226.475 1.645.608.691.22 1.32.189 1.817.115.554-.083 1.71-.699 1.951-1.373.241-.675.241-1.253.169-1.373-.072-.121-.265-.193-.554-.338z"/></svg>
+</a>
+
+<script>
+  const navToggle = document.getElementById('navToggle');
+  const mobileMenu = document.getElementById('mobileMenu');
+  const mobileClose = document.getElementById('mobileClose');
+  navToggle.addEventListener('click', () => mobileMenu.classList.add('open'));
+  mobileClose.addEventListener('click', () => mobileMenu.classList.remove('open'));
+  mobileMenu.querySelectorAll('a').forEach(a => a.addEventListener('click', () => mobileMenu.classList.remove('open')));
+
+  document.querySelectorAll('.faq-item').forEach(item => {
+    item.querySelector('.faq-q').addEventListener('click', () => {
+      const isOpen = item.classList.contains('open');
+      document.querySelectorAll('.faq-item').forEach(i => i.classList.remove('open'));
+      if(!isOpen) item.classList.add('open');
+    });
+  });
+
+  // Huellitas neón + contorno brillante al hacer click en botones CTA
+  function spawnPawTrail(btn){
+    var rect = btn.getBoundingClientRect();
+    for(var i=0;i<4;i++){
+      (function(i){
+        setTimeout(function(){
+          var s = document.createElementNS('http://www.w3.org/2000/svg','svg');
+          s.setAttribute('viewBox','0 0 106 100');
+          s.setAttribute('class','paw-walk');
+          s.innerHTML = '<use href="#pawshape" fill="currentColor"/>';
+          s.style.left = (rect.left + rect.width - 10 + i*22) + 'px';
+          s.style.top = (rect.top + (i % 2 ? 8 : -10)) + 'px';
+          document.body.appendChild(s);
+          setTimeout(function(){ s.remove(); }, 950);
+        }, i*120);
+      })(i);
+    }
+  }
+  function spawnGlowRing(btn){
+    var ring = document.createElement('span');
+    ring.className = 'btn-glow-ring';
+    btn.appendChild(ring);
+    setTimeout(function(){ ring.remove(); }, 600);
+  }
+  document.querySelectorAll('.btn, .wa-float').forEach(function(btn){
+    btn.addEventListener('click', function(){
+      spawnPawTrail(btn);
+      spawnGlowRing(btn);
+    });
+  });
+
+  document.getElementById('contactForm').addEventListener('submit', function(e){
+    e.preventDefault();
+    const nombre = document.getElementById('nombre').value.trim();
+    const negocio = document.getElementById('negocio').value.trim();
+    const giro = document.getElementById('giro').value;
+    const whatsapp = document.getElementById('whatsapp').value.trim();
+    const msg = `Hola, soy ${nombre} de ${negocio} (${giro}). Mi WhatsApp es ${whatsapp}. Quiero cotizar mi sitio web.`;
+    window.open(`https://wa.me/525527327414?text=${encodeURIComponent(msg)}`, '_blank');
+  });
+</script>
+
+</body>
+</html>
