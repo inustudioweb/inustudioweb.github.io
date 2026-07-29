@@ -3,3 +3,7 @@
 
 # Accesos directos de Windows que se cuelan al copiar carpetas
 *.lnk
+
+# Catalogo INTERNO: manual de ventas, precios y metodologia.
+# NO se publica. La version publica para clientes vive en tipos-de-pagina/
+catalogo/

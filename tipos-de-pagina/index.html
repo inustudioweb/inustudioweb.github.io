@@ -1,0 +1,290 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>¿Qué tipo de página necesita tu negocio? — Inu Studio Web</title>
+<meta name="description" content="No todos los negocios necesitan la misma página. Contesta 4 preguntas y descubre cuál de los 6 tipos le queda mejor al tuyo. Gratis y en un minuto.">
+<link rel="canonical" href="https://inustudioweb.github.io/tipos-de-pagina/">
+<meta property="og:title" content="¿Qué tipo de página necesita tu negocio?">
+<meta property="og:description" content="Contesta 4 preguntas y descubre cuál de los 6 tipos de página le queda mejor a tu negocio.">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://inustudioweb.github.io/tipos-de-pagina/">
+<link rel="icon" href="../favicon-32.png" sizes="32x32">
+<link rel="apple-touch-icon" href="../apple-touch-icon.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Space+Grotesk:wght@500;700&display=swap" rel="stylesheet">
+<style>
+:root{
+  --black:#070707; --black-soft:#0f1210; --panel:#131613;
+  --panel-border:rgba(57,255,20,.18);
+  --neon:#39ff14; --neon-dim:#22c40e;
+  --gold:#e8c14d; --white:#f4f6f3; --grey:#a7ada6;
+  --radius:16px;
+}
+*{margin:0;padding:0;box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{background:var(--black);color:var(--white);font-family:'Inter',system-ui,sans-serif;line-height:1.6;overflow-x:hidden}
+h1,h2,h3{font-family:'Space Grotesk',system-ui,sans-serif;font-weight:700;line-height:1.06;letter-spacing:-.028em}
+a{color:inherit;text-decoration:none}
+.wrap{max-width:1060px;margin:0 auto;padding:0 20px}
+
+.topbar{border-bottom:1px solid rgba(255,255,255,.07);padding:16px 0}
+.topbar .wrap{display:flex;justify-content:space-between;align-items:center;gap:16px;flex-wrap:wrap}
+.logo{font-family:'Space Grotesk';font-weight:700;font-size:1.05rem}
+.logo span{color:var(--neon)}
+.topbar a.back{color:var(--grey);font-size:.9rem}
+.topbar a.back:hover{color:var(--white)}
+
+.hero{padding:70px 0 46px;background:
+  radial-gradient(760px 340px at 12% -10%,rgba(57,255,20,.12),transparent 62%),
+  radial-gradient(600px 300px at 92% 0%,rgba(232,193,77,.08),transparent 55%),var(--black)}
+.eyebrow{font-size:12px;letter-spacing:.22em;text-transform:uppercase;color:var(--neon);font-weight:600}
+h1{font-size:clamp(2.1rem,6vw,3.6rem);margin:14px 0 18px}
+h1 .ac{color:var(--neon)}
+.lede{color:var(--grey);max-width:60ch;font-size:1.06rem}
+
+section{padding:52px 0;border-bottom:1px solid rgba(255,255,255,.06)}
+.h2{font-size:clamp(1.5rem,3.6vw,2.2rem);margin-bottom:10px}
+.sub{color:var(--grey);margin-bottom:26px;max-width:64ch}
+
+/* Diagnóstico */
+.quiz{background:var(--panel);border:1px solid var(--panel-border);border-radius:var(--radius);padding:26px}
+.q{margin-bottom:22px}
+.q-t{font-weight:600;margin-bottom:10px}
+.opts{display:flex;flex-wrap:wrap;gap:8px}
+.opt{border:1px solid rgba(255,255,255,.14);background:var(--black-soft);color:var(--grey);
+  padding:10px 15px;border-radius:999px;font-size:.94rem;cursor:pointer;font-family:inherit;transition:.15s}
+.opt:hover{border-color:var(--neon-dim);color:var(--white)}
+.opt[aria-pressed="true"]{background:var(--neon);border-color:var(--neon);color:#04210a;font-weight:600}
+.res{margin-top:6px;padding:24px;border-radius:12px;background:var(--black-soft);border:1px solid var(--panel-border);display:none}
+.res.on{display:block;animation:aparece .4s ease}
+@keyframes aparece{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}
+.res .lbl{font-size:12px;letter-spacing:.18em;text-transform:uppercase;color:var(--gold)}
+.res h3{font-size:1.5rem;margin:8px 0 10px}
+.res p{color:var(--grey)}
+.res .btn{margin-top:18px}
+
+.btn{display:inline-block;padding:13px 24px;border-radius:999px;font-weight:600;font-size:.96rem;transition:.18s}
+.btn-primary{background:var(--neon);color:#04210a}
+.btn-primary:hover{box-shadow:0 0 26px rgba(57,255,20,.45);transform:translateY(-1px)}
+.btn-outline{border:1px solid var(--panel-border);color:var(--white)}
+.btn-outline:hover{border-color:var(--neon);color:var(--neon)}
+
+/* Tarjetas */
+.cards{display:grid;grid-template-columns:repeat(auto-fit,minmax(290px,1fr));gap:16px}
+.card{background:var(--panel);border:1px solid var(--panel-border);border-radius:var(--radius);
+  padding:24px;display:flex;flex-direction:column;gap:12px;scroll-margin-top:20px;transition:.2s}
+.card:hover{border-color:rgba(57,255,20,.42);transform:translateY(-3px)}
+.card.destacada{border-color:var(--neon);box-shadow:0 0 34px rgba(57,255,20,.16)}
+.card h3{font-size:1.28rem}
+.card .para{color:var(--gold);font-size:.86rem;font-weight:500}
+.card .desc{color:var(--grey);font-size:.95rem;flex:1}
+.card .logra{background:var(--black-soft);border-radius:10px;padding:12px 14px;font-size:.9rem;color:var(--white)}
+.card .logra b{color:var(--neon);display:block;font-size:.72rem;letter-spacing:.14em;text-transform:uppercase;margin-bottom:5px}
+.ej{font-size:.84rem;color:var(--grey)}
+.ej a{color:var(--neon);text-decoration:underline;text-underline-offset:3px}
+
+.cierre{text-align:center;padding:62px 0}
+.cierre h2{font-size:clamp(1.6rem,4.4vw,2.5rem);margin-bottom:14px}
+.cierre p{color:var(--grey);max-width:52ch;margin:0 auto 26px}
+footer{padding:34px 0 54px;color:var(--grey);font-size:.87rem;text-align:center}
+footer a{color:var(--neon)}
+
+@media (prefers-reduced-motion: reduce){
+  *{animation-duration:.01ms !important;transition-duration:.01ms !important;scroll-behavior:auto !important}
+}
+</style>
+</head>
+<body>
+
+<div class="topbar">
+  <div class="wrap">
+    <a class="logo" href="../">🐾 Inu Studio <span>Web</span></a>
+    <a class="back" href="../">← Volver al sitio</a>
+  </div>
+</div>
+
+<header class="hero">
+  <div class="wrap">
+    <div class="eyebrow">Guía gratuita · 1 minuto</div>
+    <h1>¿Qué tipo de página<br>necesita <span class="ac">tu negocio</span>?</h1>
+    <p class="lede">No todos los negocios necesitan lo mismo. Una taquería y un despacho contable necesitan páginas completamente distintas — y pagar por la equivocada es el error más caro que vemos. Contesta 4 preguntas y te decimos cuál te toca.</p>
+  </div>
+</header>
+
+<section>
+  <div class="wrap">
+    <h2 class="h2">Contesta 4 preguntas</h2>
+    <p class="sub">Son sobre tu negocio, no sobre tecnología. No pedimos tus datos ni tu correo.</p>
+
+    <div class="quiz">
+      <div class="q" data-q="productos">
+        <div class="q-t">1 · ¿Cuántas cosas distintas vendes?</div>
+        <div class="opts">
+          <button class="opt" data-v="uno">Una sola</button>
+          <button class="opt" data-v="pocos">Entre 2 y 15</button>
+          <button class="opt" data-v="muchos">Más de 15</button>
+          <button class="opt" data-v="ninguno">No vendo — busco contactos</button>
+        </div>
+      </div>
+      <div class="q" data-q="donde">
+        <div class="q-t">2 · ¿Desde dónde te ven tus clientes?</div>
+        <div class="opts">
+          <button class="opt" data-v="movil">Casi todo celular</button>
+          <button class="opt" data-v="mixto">Mitad y mitad</button>
+          <button class="opt" data-v="escritorio">Sobre todo computadora</button>
+        </div>
+      </div>
+      <div class="q" data-q="visual">
+        <div class="q-t">3 · ¿Qué tan visual es lo que vendes?</div>
+        <div class="opts">
+          <button class="opt" data-v="mucho">Muy visual — entra por los ojos</button>
+          <button class="opt" data-v="medio">Se puede fotografiar bien</button>
+          <button class="opt" data-v="poco">Es un servicio o una idea</button>
+        </div>
+      </div>
+      <div class="q" data-q="accion">
+        <div class="q-t">4 · ¿Qué quieres que haga quien te visita?</div>
+        <div class="opts">
+          <button class="opt" data-v="pedir">Pedirme por WhatsApp</button>
+          <button class="opt" data-v="comprar">Comprar ahí mismo</button>
+          <button class="opt" data-v="cotizar">Pedirme cotización</button>
+          <button class="opt" data-v="registro">Dejarme sus datos</button>
+        </div>
+      </div>
+
+      <div class="res" id="res">
+        <div class="lbl">Tu negocio necesita</div>
+        <h3 id="res-n">—</h3>
+        <p id="res-p"></p>
+        <a class="btn btn-primary" id="res-cta" href="#" target="_blank" rel="noopener">Cotizar esta página por WhatsApp</a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section>
+  <div class="wrap">
+    <h2 class="h2">Los seis tipos</h2>
+    <p class="sub">Cada uno resuelve un problema distinto. Estos son, en corto, para qué sirve cada quien.</p>
+
+    <div class="cards">
+      <article class="card" id="a1">
+        <h3>Vitrina Inmersiva</h3>
+        <div class="para">Marcas premium · Hoteles · Productos aspiracionales</div>
+        <p class="desc">Video en movimiento, tipografía grande, muy pocos colores. Vende la sensación antes que el dato.</p>
+        <div class="logra"><b>Qué logra</b>Que tu marca se perciba cara antes de que digas el precio.</div>
+      </article>
+
+      <article class="card" id="a2">
+        <h3>Scroll Cinemático</h3>
+        <div class="para">Producto físico · Comida · Objetos que se arman</div>
+        <p class="desc">Tu producto se arma solo mientras la persona baja con el dedo. Es el gancho más difícil de ignorar.</p>
+        <div class="logra"><b>Qué logra</b>Que se queden mirando en vez de cerrar a los 3 segundos.</div>
+        <p class="ej">Ya en línea: <a href="https://inusushi.github.io/kangreburger.html" target="_blank" rel="noopener">Kangreburger</a></p>
+      </article>
+
+      <article class="card" id="a3">
+        <h3>Catálogo con Carrito</h3>
+        <div class="para">Restaurantes · Dark kitchens · Tiendas</div>
+        <p class="desc">Menú completo, carrito, y el pedido te llega escrito a WhatsApp. Tú editas precios y pausas platillos sin depender de nadie.</p>
+        <div class="logra"><b>Qué logra</b>Se acaban los pedidos a medias y los "¿cuánto era?". Sin comisión por venta.</div>
+        <p class="ej">Ya en línea: <a href="https://inusushi.github.io" target="_blank" rel="noopener">Inu Sushi</a></p>
+      </article>
+
+      <article class="card" id="a4">
+        <h3>Un Solo Producto</h3>
+        <div class="para">Lanzamientos · Cursos · Un servicio</div>
+        <p class="desc">Toda la página empuja hacia una sola decisión. Sin menú, sin distracciones, sin salidas.</p>
+        <div class="logra"><b>Qué logra</b>Convierte mejor cuando mandas publicidad pagada a un solo lugar.</div>
+      </article>
+
+      <article class="card" id="a5">
+        <h3>Captación B2B</h3>
+        <div class="para">Mayoreo · Distribuidores · Franquicias</div>
+        <p class="desc">No vende al público: busca socios. Otro tono, otros argumentos, y un formulario que filtra a quien no te sirve.</p>
+        <div class="logra"><b>Qué logra</b>Dejas de perder horas con contactos que nunca iban a comprarte.</div>
+        <p class="ej">Ya en línea: <a href="https://inusushi.github.io/mushipan.html" target="_blank" rel="noopener">Mushipan</a></p>
+      </article>
+
+      <article class="card" id="a6">
+        <h3>Portafolio Editorial</h3>
+        <div class="para">Fotógrafos · Arquitectos · Creativos</div>
+        <p class="desc">Tu trabajo en grande, con mucho aire alrededor y cero ruido. La obra manda.</p>
+        <div class="logra"><b>Qué logra</b>Que te contraten por tu ojo, sin tener que explicarte.</div>
+      </article>
+    </div>
+  </div>
+</section>
+
+<section class="cierre">
+  <div class="wrap">
+    <h2>¿Ya sabes cuál es la tuya?</h2>
+    <p>Cuéntanos de tu negocio y te decimos qué te conviene — aunque no sea con nosotros. La primera plática no se cobra.</p>
+    <a class="btn btn-primary" href="https://wa.me/525527327414?text=Hola%2C%20vi%20la%20gu%C3%ADa%20de%20tipos%20de%20p%C3%A1gina%20y%20quiero%20cotizar%20la%20m%C3%ADa" target="_blank" rel="noopener">Hablar por WhatsApp</a>
+    <a class="btn btn-outline" href="../" style="margin-left:10px">Ver paquetes y precios</a>
+  </div>
+</section>
+
+<footer>
+  <div class="wrap">
+    Hecho por <a href="../">Inu Studio Web</a> · Diseño web para negocios que quieren vender, no solo verse bonitos.
+  </div>
+</footer>
+
+<script>
+const WA = 'https://wa.me/525527327414?text=';
+const R = {
+  a1:{n:'Vitrina Inmersiva', p:'Lo que vendes entra por los ojos y tu cliente te evalúa con calma. Aquí conviene invertir en imagen y movimiento: es lo que va a justificar tu precio antes de que lo digas.'},
+  a2:{n:'Scroll Cinemático', p:'Tu producto es físico y muy visual. Que se arme solo mientras la persona baja es el gancho más fuerte que existe hoy, y ya lo tenemos funcionando en dos negocios reales.'},
+  a3:{n:'Catálogo con Carrito', p:'Tienes muchos productos y cierras por WhatsApp. Necesitas menú completo, carrito, y poder cambiar precios tú misma sin llamarle a nadie.'},
+  a4:{n:'Una Landing de Un Solo Producto', p:'Vendes una sola cosa. Toda la página debe empujar hacia esa decisión, sin menú y sin distracciones que te roben la venta.'},
+  a5:{n:'Página de Captación B2B', p:'No buscas compradores sueltos sino socios. Sin carrito: aquí el objetivo es que te escriban y filtrar desde el primer momento a quien no te conviene.'},
+  a6:{n:'Portafolio Editorial', p:'Vendes tu ojo y tu criterio. Tu trabajo en grande, con aire alrededor y nada que distraiga.'}
+};
+const resp = {};
+
+function calcular(){
+  const s = {a1:0,a2:0,a3:0,a4:0,a5:0,a6:0};
+  const {productos:pr, donde:dn, visual:vi, accion:ac} = resp;
+  if (pr==='uno')     { s.a4+=3; s.a2+=2; s.a1+=1; }
+  if (pr==='pocos')   { s.a4+=1; s.a2+=2; s.a1+=1; s.a3+=1; }
+  if (pr==='muchos')  { s.a3+=4; }
+  if (pr==='ninguno') { s.a5+=3; s.a6+=2; s.a1+=1; }
+  if (dn==='movil')      { s.a3+=2; s.a4+=1; s.a1-=2; }
+  if (dn==='escritorio') { s.a1+=2; s.a6+=2; }
+  if (vi==='mucho') { s.a2+=2; s.a1+=2; s.a6+=2; }
+  if (vi==='poco')  { s.a4+=2; s.a5+=2; s.a2-=2; s.a6-=1; }
+  if (ac==='pedir')   { s.a3+=3; }
+  if (ac==='comprar') { s.a4+=3; }
+  if (ac==='cotizar') { s.a5+=2; s.a1+=1; s.a6+=1; }
+  if (ac==='registro'){ s.a5+=2; s.a4+=1; }
+  return Object.entries(s).sort((a,b)=>b[1]-a[1])[0][0];
+}
+
+document.querySelectorAll('.q').forEach(q => {
+  q.addEventListener('click', e => {
+    const b = e.target.closest('.opt');
+    if (!b) return;
+    q.querySelectorAll('.opt').forEach(o => o.setAttribute('aria-pressed','false'));
+    b.setAttribute('aria-pressed','true');
+    resp[q.dataset.q] = b.dataset.v;
+    if (Object.keys(resp).length < 4) return;
+
+    const id = calcular();
+    document.getElementById('res-n').textContent = R[id].n;
+    document.getElementById('res-p').textContent = R[id].p;
+    document.getElementById('res-cta').href = WA + encodeURIComponent(
+      `Hola, hice la guía de tipos de página y me salió "${R[id].n}". Quiero cotizar la mía.`);
+    document.getElementById('res').classList.add('on');
+
+    document.querySelectorAll('.card').forEach(c => c.classList.remove('destacada'));
+    const card = document.getElementById(id);
+    if (card) card.classList.add('destacada');
+  });
+});
+</script>
+</body>
+</html>
