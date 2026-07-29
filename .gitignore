@@ -1,0 +1,5 @@
+# Configuracion local de desarrollo (rutas absolutas de esta maquina)
+.claude/
+
+# Accesos directos de Windows que se cuelan al copiar carpetas
+*.lnk

@@ -146,6 +146,19 @@
     mask-image:radial-gradient(ellipse at center, black 0%, transparent 72%);
     pointer-events:none;
   }
+  /* Capa de video de fondo. Si no hay archivo de video, esta capa
+     queda invisible y el hero se ve exactamente como antes. */
+  .hero-video{
+    position:absolute;inset:0;z-index:0;overflow:hidden;
+    opacity:0;transition:opacity 1.2s ease;
+  }
+  .hero-video.on{opacity:.42;}
+  .hero-video video{width:100%;height:100%;object-fit:cover;}
+  /* El degradado encima es lo que mantiene el texto legible */
+  .hero-video::after{
+    content:"";position:absolute;inset:0;
+    background:linear-gradient(180deg, rgba(7,7,7,.55) 0%, rgba(7,7,7,.80) 100%);
+  }
   .hero-grid{
     position:relative;z-index:1;
     display:grid;grid-template-columns:1.15fr .85fr;gap:36px;align-items:center;
@@ -153,6 +166,10 @@
   .hero-text{text-align:left;}
   .hero h1{
     font-size:clamp(2.1rem, 4.6vw, 3.15rem);
+    /* Tracking negativo: la firma visual del estilo (Apple -0.015em,
+       Fantasy -0.04em). Aqui un punto medio para marca tecnologica. */
+    letter-spacing:-.028em;
+    line-height:1.04;
     margin-bottom:22px;
   }
   .hero h1 .accent{color:var(--neon);text-shadow:0 0 22px rgba(57,255,20,.45);}
@@ -408,6 +425,14 @@
     position:absolute;top:24px;right:24px;background:none;border:none;
     color:var(--white);font-size:1.8rem;cursor:pointer;
   }
+
+  /* Respetar a quien pidio menos movimiento en su sistema operativo.
+     No es opcional: es accesibilidad, y Apple si lo hace. */
+  @media (prefers-reduced-motion: reduce){
+    *{animation-duration:.01ms !important;animation-iteration-count:1 !important;
+      transition-duration:.01ms !important;scroll-behavior:auto !important;}
+    .hero-video{display:none;}
+  }
 </style>
 </head>
 <body>
@@ -444,6 +469,13 @@
 
 <!-- HERO -->
 <header class="hero">
+  <!-- Video de fondo. Sin src a proposito: no descarga NADA hasta que
+       el JS confirma que el archivo existe. Patron tomado de Apple,
+       que tiene 16 videos en su pagina y 0 cargados al abrir.
+       Para activarlo: pon hero-loop.webm en la raiz del proyecto. -->
+  <div class="hero-video" id="heroVideo">
+    <video loop muted playsinline preload="none" data-src="hero-loop.webm" aria-hidden="true"></video>
+  </div>
   <div class="container">
     <div class="hero-grid">
       <div class="hero-text">
@@ -461,7 +493,13 @@
         </div>
       </div>
       <div class="hero-mascot">
-        <img src="inu-jobs.png" alt="Inu Jobs, mascota de Inu Studio Web" loading="eager">
+        <!-- webp 48 KB con png de respaldo. width/height evitan que la
+             pagina "salte" mientras carga (bueno para Google). -->
+        <picture>
+          <source srcset="inu-jobs-620.webp" type="image/webp">
+          <img src="inu-jobs.png" width="620" height="923" fetchpriority="high"
+               alt="Inu Jobs, mascota de Inu Studio Web" loading="eager" decoding="async">
+        </picture>
       </div>
     </div>
   </div>
@@ -801,6 +839,41 @@
     const msg = `Hola, soy ${nombre} de ${negocio} (${giro}). Mi WhatsApp es ${whatsapp}. Quiero cotizar mi sitio web.`;
     window.open(`https://wa.me/525527327414?text=${encodeURIComponent(msg)}`, '_blank');
   });
+
+  /* ---------------------------------------------------------------
+     VIDEO DE FONDO — carga bajo demanda
+     Patron de Apple: el elemento de video nace SIN src, y el navegador no
+     descarga nada. Solo si el archivo existe de verdad, y solo cuando
+     el hero esta en pantalla, se carga y se reproduce.
+     Si el archivo no existe, no pasa absolutamente nada: el hero se
+     queda con su fondo actual y nadie ve un error.
+     --------------------------------------------------------------- */
+  (function(){
+    const capa = document.getElementById('heroVideo');
+    if (!capa) return;
+    const video = capa.querySelector('video');
+    const archivo = video.dataset.src;
+
+    // No molestar a quien pidio menos movimiento
+    if (matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+    // No gastar datos moviles de quien tiene conexion lenta o ahorro activado
+    const red = navigator.connection;
+    if (red && (red.saveData || /2g/.test(red.effectiveType || ''))) return;
+
+    // ¿Existe el archivo? Se pregunta con HEAD: no descarga el video.
+    fetch(archivo, { method: 'HEAD' })
+      .then(r => {
+        if (!r.ok) return;                       // no existe: no hacemos nada
+        new IntersectionObserver((entradas, obs) => {
+          entradas.forEach(en => {
+            if (!en.isIntersecting) { video.pause(); return; }
+            if (!video.src) video.src = archivo;  // recien aqui se descarga
+            video.play().then(() => capa.classList.add('on')).catch(() => {});
+          });
+        }, { rootMargin: '200px' }).observe(capa);
+      })
+      .catch(() => {});                          // sin conexion: silencio
+  })();
 </script>
 
 </body>
