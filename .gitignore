@@ -7,3 +7,6 @@
 # Catalogo INTERNO: manual de ventas, precios y metodologia.
 # NO se publica. La version publica para clientes vive en tipos-de-pagina/
 catalogo/
+
+# Plantillas base para clientes: materia prima interna, no se publican.
+plantillas/
