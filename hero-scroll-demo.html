@@ -1,0 +1,248 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Demo — Hero scroll-driven | Inu Studio Web</title>
+<meta name="robots" content="noindex,nofollow">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --black:#070707; --panel:#131613;
+    --neon:#39ff14; --neon-dim:#22c40e;
+    --gold:#e8c14d; --white:#f4f6f3; --grey:#a7ada6;
+  }
+  *{margin:0;padding:0;box-sizing:border-box}
+  html{scroll-behavior:smooth}
+  body{background:var(--black);color:var(--white);font-family:'Inter',sans-serif;line-height:1.65}
+  h1,h2{font-family:'Space Grotesk',sans-serif;font-weight:700;line-height:1.15}
+  .container{max-width:1160px;margin:0 auto;padding:0 20px}
+  .eyebrow{display:inline-block;font-size:.75rem;letter-spacing:.14em;text-transform:uppercase;
+    color:var(--neon);font-weight:600;margin-bottom:14px}
+  .btn{display:inline-flex;align-items:center;gap:8px;padding:15px 28px;border-radius:999px;
+    font-weight:600;font-size:.98rem;cursor:pointer;border:none;text-decoration:none;
+    transition:transform .18s ease, box-shadow .18s ease}
+  .btn-primary{background:var(--neon);color:#06130a;box-shadow:0 6px 24px rgba(57,255,20,.25)}
+  .btn-primary:hover{transform:translateY(-2px);box-shadow:0 10px 30px rgba(57,255,20,.4)}
+  .btn-outline{background:transparent;color:var(--white);border:1.5px solid rgba(232,193,77,.55)}
+  .btn-outline:hover{border-color:var(--gold);background:rgba(232,193,77,.08);transform:translateY(-2px)}
+
+  /* ===== HERO SCROLL-DRIVEN =====
+     Mismo motor que el hero de Kangreburger: un tramo alto de scroll, un
+     lienzo pegado arriba, y el frame se elige segun cuanto has bajado.
+     Sin librerias: es exactamente lo que hace Apple en airpods-pro. */
+  .hero-scroll{position:relative;height:320vh;background:#000}
+  .hs-sticky{position:sticky;top:0;height:100svh;overflow:hidden}
+  .hs-canvas{position:absolute;inset:0;width:100%;height:100%;display:block}
+  /* Vineta: sin esto el texto blanco se pierde sobre los frames claros */
+  .hs-veil{position:absolute;inset:0;z-index:1;pointer-events:none;
+    background:
+      linear-gradient(180deg, rgba(7,7,7,.72) 0%, rgba(7,7,7,.15) 38%, rgba(7,7,7,.55) 78%, rgba(7,7,7,.92) 100%),
+      radial-gradient(ellipse at 50% 45%, transparent 30%, rgba(7,7,7,.55) 100%)}
+  .hs-head{position:absolute;top:0;left:0;right:0;z-index:3;text-align:center;
+    padding:5.2rem 1.2rem 0;pointer-events:none}
+  .hs-head h1{font-size:clamp(2rem,4.8vw,3.2rem);letter-spacing:-.028em;line-height:1.04;
+    text-shadow:0 4px 26px rgba(0,0,0,.9);max-width:15ch;margin:0 auto}
+  .hs-head h1 .accent{color:var(--neon);text-shadow:0 0 22px rgba(57,255,20,.5)}
+  .hs-caption{position:absolute;left:0;right:0;bottom:11vh;z-index:3;text-align:center;
+    padding:0 1.2rem;pointer-events:none;opacity:0;transform:translateY(12px);
+    transition:opacity .35s ease, transform .35s ease}
+  .hs-caption.on{opacity:1;transform:none}
+  .hs-caption b{display:block;font-family:'Space Grotesk',sans-serif;
+    font-size:clamp(1.25rem,3.6vw,1.9rem);color:var(--neon);letter-spacing:-.02em;
+    text-shadow:0 3px 18px rgba(0,0,0,.9)}
+  .hs-caption span{display:block;font-size:clamp(.88rem,2.2vw,1.05rem);color:var(--white);
+    opacity:.9;margin-top:.3rem;text-shadow:0 2px 14px rgba(0,0,0,.9)}
+  .hs-cta{position:absolute;left:0;right:0;bottom:9vh;z-index:5;text-align:center;padding:0 1.2rem;
+    opacity:0;transform:translateY(18px);pointer-events:none;
+    transition:opacity .45s ease, transform .45s ease}
+  .hs-cta.on{opacity:1;transform:none;pointer-events:auto}
+  .hs-cta p{font-family:'Space Grotesk',sans-serif;font-size:clamp(1.15rem,3.4vw,1.75rem);
+    margin-bottom:1.1rem;text-shadow:0 3px 20px rgba(0,0,0,.95)}
+  .hs-btns{display:flex;gap:.8rem;flex-wrap:wrap;justify-content:center}
+  .hs-hint{position:absolute;left:50%;transform:translateX(-50%);bottom:2.6vh;z-index:3;
+    font-size:.72rem;letter-spacing:.18em;text-transform:uppercase;color:var(--white);opacity:.7;
+    pointer-events:none;transition:opacity .4s ease;animation:hsFloat 1.6s ease-in-out infinite}
+  .hs-hint.off{opacity:0}
+  @keyframes hsFloat{0%,100%{transform:translate(-50%,0)}50%{transform:translate(-50%,-6px)}}
+  .hs-progress{position:absolute;left:0;right:0;bottom:0;height:3px;z-index:4;
+    background:rgba(244,246,243,.12)}
+  .hs-progress span{display:block;height:100%;width:0;
+    background:linear-gradient(90deg,var(--neon),var(--gold))}
+
+  /* Quien pidio menos movimiento ve un hero fijo, no un tramo de 320vh */
+  @media (prefers-reduced-motion: reduce){
+    .hero-scroll{height:100svh}
+    .hs-hint{display:none}
+    .hs-caption{opacity:1;transform:none}
+    .hs-cta{opacity:1;transform:none;pointer-events:auto}
+  }
+
+  .after{padding:90px 0;text-align:center}
+  .after h2{font-size:1.6rem;margin-bottom:10px}
+  .after p{color:var(--grey)}
+</style>
+</head>
+<body>
+
+<header class="hero-scroll" id="heroScroll" aria-label="Inu Studio Web: diseñamos páginas que venden">
+  <div class="hs-sticky">
+    <canvas class="hs-canvas" id="hsCanvas" aria-hidden="true"></canvas>
+    <div class="hs-veil" aria-hidden="true"></div>
+
+    <div class="hs-head">
+      <p class="eyebrow">Diseño web para negocios locales</p>
+      <h1>Tu negocio merece <span class="accent">una plataforma</span>, no un folleto.</h1>
+    </div>
+
+    <div class="hs-caption" id="hsCaption"><b></b><span></span></div>
+
+    <div class="hs-cta" id="hsCta">
+      <p>Listo para recibir clientes desde el día uno.</p>
+      <div class="hs-btns">
+        <a class="btn btn-primary" href="https://wa.me/525527327414">Cotizar mi sitio web</a>
+        <a class="btn btn-outline" href="index.html">Ver la web actual</a>
+      </div>
+    </div>
+
+    <p class="hs-hint" id="hsHint">Sigue bajando</p>
+    <div class="hs-progress"><span id="hsBar"></span></div>
+  </div>
+</header>
+
+<section class="after">
+  <div class="container">
+    <h2>Aquí seguiría el resto de la página</h2>
+    <p>Esta es una página de prueba. El <code>index.html</code> real no se ha tocado.</p>
+  </div>
+</section>
+
+<script>
+/* ===== HERO SCROLL-DRIVEN =====
+   Portado del motor de kangreburger.html. Cambios respecto al original:
+   - carga por lotes: primero 1 de cada 4 frames para que se pueda scrollear
+     de inmediato, y el resto despues. Con 66 frames a 29 KB son 1.9 MB;
+     cargarlos todos de golpe bloquearia el hero en 4G.
+   - respeta prefers-reduced-motion: si esta activo, dibuja un frame fijo. */
+(function(){
+  const FRAME_COUNT = 66;
+  const framePath = i => 'frames-hero/frame-' + String(i).padStart(3,'0') + '.webp';
+
+  const section  = document.getElementById('heroScroll');
+  const canvas   = document.getElementById('hsCanvas');
+  const caption  = document.getElementById('hsCaption');
+  const capTitle = caption.querySelector('b');
+  const capSub   = caption.querySelector('span');
+  const hint     = document.getElementById('hsHint');
+  const bar      = document.getElementById('hsBar');
+  const cta      = document.getElementById('hsCta');
+  if (!section || !canvas) return;
+  const ctx = canvas.getContext('2d');
+  const CTA_AT = 0.80;
+
+  const CAPTIONS = [
+    { from:0.04, to:0.36, t:'Diseño, código y estrategia',  s:'Un solo estudio, sin intermediarios ni plantillas genéricas' },
+    { from:0.42, to:0.74, t:'Y tu negocio queda en línea',  s:'Rápido, optimizado a celular y listo para recibir pedidos' }
+  ];
+
+  const images = new Array(FRAME_COUNT + 1);
+  const loaded = new Array(FRAME_COUNT + 1).fill(false);
+  let currentFrame = 1;
+
+  function cargar(i, prioridad){
+    const img = new Image();
+    img.decoding = 'async';
+    if (prioridad) img.fetchPriority = 'high';
+    img.onload = () => { loaded[i] = true; if (i === currentFrame || i === 1) draw(currentFrame); };
+    img.src = framePath(i);
+    images[i] = img;
+  }
+
+  // Lote 1: el primer frame y luego 1 de cada 4. El hueco lo tapa nearestLoaded().
+  cargar(1, true);
+  for (let i = 5; i <= FRAME_COUNT; i += 4) cargar(i);
+  // Lote 2: el resto, cuando el navegador este libre.
+  const resto = () => { for (let i = 2; i <= FRAME_COUNT; i++) if (!images[i]) cargar(i); };
+  ('requestIdleCallback' in window) ? requestIdleCallback(resto, { timeout: 2500 })
+                                    : setTimeout(resto, 1200);
+
+  function nearestLoaded(i){
+    if (loaded[i]) return i;
+    for (let d = 1; d < FRAME_COUNT; d++){
+      if (loaded[i-d]) return i-d;
+      if (loaded[i+d]) return i+d;
+    }
+    return 0;
+  }
+
+  function resize(){
+    const dpr = Math.min(window.devicePixelRatio || 1, 2);
+    const w = canvas.clientWidth  || window.innerWidth;
+    const h = canvas.clientHeight || window.innerHeight;
+    if (!w || !h){ setTimeout(resize, 50); return; }
+    canvas.width  = Math.round(w * dpr);
+    canvas.height = Math.round(h * dpr);
+    draw(currentFrame);
+  }
+
+  function draw(i){
+    const idx = nearestLoaded(i);
+    if (!idx) return;
+    const img = images[idx];
+    const cw = canvas.width, ch = canvas.height;
+    ctx.fillStyle = '#000';
+    ctx.fillRect(0, 0, cw, ch);
+    // "cover" en vez de "contain": los frames son cuadrados (608x608) y en
+    // pantalla ancha dejarian dos franjas negras a los lados.
+    const scale = Math.max(cw / img.naturalWidth, ch / img.naturalHeight);
+    const w = img.naturalWidth * scale, h = img.naturalHeight * scale;
+    ctx.drawImage(img, (cw - w) / 2, (ch - h) / 2, w, h);
+  }
+
+  const quieto = matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+  let ticking = false;
+  function onScroll(){
+    if (ticking) return;
+    ticking = true;
+    requestAnimationFrame(() => {
+      ticking = false;
+      const rect  = section.getBoundingClientRect();
+      const total = rect.height - window.innerHeight;
+      const p = total > 0 ? Math.min(1, Math.max(0, -rect.top / total)) : 0;
+      const frame = Math.min(FRAME_COUNT, Math.max(1, Math.round(p * (FRAME_COUNT - 1)) + 1));
+      if (frame !== currentFrame){ currentFrame = frame; draw(frame); }
+      bar.style.width = (p * 100) + '%';
+      hint.classList.toggle('off', p > 0.04);
+      cta.classList.toggle('on', p >= CTA_AT);
+      const cap = p < CTA_AT ? CAPTIONS.find(c => p >= c.from && p < c.to) : null;
+      if (cap){
+        if (capTitle.textContent !== cap.t){ capTitle.textContent = cap.t; capSub.textContent = cap.s; }
+        caption.classList.add('on');
+      } else {
+        caption.classList.remove('on');
+      }
+    });
+  }
+
+  resize();
+  requestAnimationFrame(resize);
+  window.addEventListener('resize', resize);
+  if ('ResizeObserver' in window) new ResizeObserver(resize).observe(canvas.parentElement);
+
+  if (quieto){
+    currentFrame = FRAME_COUNT;          // frame final fijo
+    draw(currentFrame);
+    caption.classList.add('on');
+    capTitle.textContent = CAPTIONS[1].t;
+    capSub.textContent   = CAPTIONS[1].s;
+  } else {
+    window.addEventListener('scroll', onScroll, { passive: true });
+    onScroll();
+  }
+})();
+</script>
+</body>
+</html>

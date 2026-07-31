@@ -10,3 +10,7 @@ catalogo/
 
 # Plantillas base para clientes: materia prima interna, no se publican.
 plantillas/
+
+# PNG originales del hero (23 MB). Lo que sirve la web son los webp ya
+# convertidos en frames-hero/ (1.9 MB). Los originales son materia prima.
+Frames para inu jobs web hero scroll/
