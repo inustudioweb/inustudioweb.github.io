@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://inustudioweb.github.io/sitemap.xml
