@@ -102,7 +102,7 @@
             "description": "Menú digital interactivo, pedidos por WhatsApp sin comisión, optimización para Google Maps y diseño mobile-first. Ideal para restaurantes y comida.",
             "priceSpecification": {
               "@type": "PriceSpecification",
-              "minPrice": "3500",
+              "minPrice": "6500",
               "priceCurrency": "MXN",
               "valueAddedTaxIncluded": false
             },
@@ -114,7 +114,7 @@
             "description": "Catálogo de productos, carrito de compras integrado, cobro con tarjeta o efectivo y stock sincronizado. Ideal para retail y tiendas físicas.",
             "priceSpecification": {
               "@type": "PriceSpecification",
-              "minPrice": "3500",
+              "minPrice": "12000",
               "priceCurrency": "MXN",
               "valueAddedTaxIncluded": false
             },
@@ -123,7 +123,7 @@
           {
             "@type": "Offer",
             "name": "Servicios",
-            "description": "Landing enfocada en captar leads, agenda de citas integrada y presentación clara de servicios. Ideal para profesionales y consultoría.",
+            "description": "Landing enfocada en captar leads, contacto directo por WhatsApp y presentación clara de servicios. Ideal para profesionales y consultoría.",
             "priceSpecification": {
               "@type": "PriceSpecification",
               "minPrice": "3500",
@@ -423,26 +423,128 @@
     display:inline-block;margin-top:16px;font-size:.75rem;
     color:var(--gold);font-weight:600;letter-spacing:.05em;text-transform:uppercase;
   }
+  /* Ejemplos reales dentro de cada giro: que el cliente vea uno de SU rubro
+     sin tener que bajar hasta el portafolio. */
+  .seg-ejemplos{
+    margin-top:18px;padding-top:16px;
+    border-top:1px solid rgba(255,255,255,.07);
+  }
+  .seg-ejemplos b{
+    display:block;font-size:.7rem;letter-spacing:.09em;text-transform:uppercase;
+    color:var(--grey);margin-bottom:10px;font-weight:600;
+  }
+  .seg-ej{display:flex;flex-wrap:wrap;gap:8px;}
+  .seg-ej a{
+    display:inline-flex;align-items:center;gap:6px;
+    font-size:.8rem;font-weight:600;color:var(--white);
+    background:rgba(57,255,20,.07);border:1px solid var(--panel-border);
+    padding:6px 12px;border-radius:100px;
+    transition:background .2s ease,border-color .2s ease,color .2s ease;
+  }
+  .seg-ej a:hover{background:rgba(57,255,20,.16);border-color:var(--neon);color:var(--neon);}
+  .seg-ej .pronto{
+    display:inline-block;font-size:.8rem;color:var(--grey);
+    border:1px dashed rgba(255,255,255,.14);padding:6px 12px;border-radius:100px;
+  }
 
-  /* PORTFOLIO */
-  .portfolio-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:24px;}
-  @media(max-width:900px){.portfolio-grid{grid-template-columns:1fr;}}
+  /* PORTFOLIO — scroll horizontal pinneado.
+     Mismo patron que la seccion de trayectoria de marcelfranco.art: la altura
+     de la seccion se iguala al recorrido lateral, asi 1px de scroll vertical
+     = 1px de desplazamiento y el movimiento no acelera. */
+  #portafolio{padding:0;}
+  .horiz__sticky{
+    position:sticky;top:0;height:100svh;
+    display:flex;align-items:center;overflow:hidden;
+  }
+  .horiz__inner{width:100%;}
+  .horiz__track{
+    display:flex;gap:24px;width:max-content;
+    padding:0 max(20px,calc((100vw - 1160px)/2));
+    will-change:transform;
+  }
+  .horiz__progress{
+    height:2px;background:rgba(255,255,255,.08);border-radius:2px;
+    margin-top:28px;overflow:hidden;
+  }
+  .horiz__progress i{
+    display:block;height:100%;width:0;
+    background:linear-gradient(90deg,var(--neon),var(--gold));
+  }
+  /* Sin JS, en movil, o si el recorrido lateral es tan corto que pinear no
+     vale la pena (pantallas muy anchas): carrusel nativo con snap.
+     Nunca queda contenido inalcanzable. */
+  #portafolio.horiz--libre{padding:90px 0;}
+  #portafolio.horiz--libre .horiz__sticky{position:static;height:auto;overflow:visible;}
+  #portafolio.horiz--libre .horiz__track{
+    width:auto;overflow-x:auto;scroll-snap-type:x mandatory;
+    padding-bottom:8px;transform:none!important;
+  }
+  #portafolio.horiz--libre .port-card{scroll-snap-align:center;}
+  #portafolio.horiz--libre .horiz__progress{display:none;}
+  @media(max-width:900px){
+    #portafolio{padding:90px 0;}
+    .horiz__sticky{position:static;height:auto;overflow:visible;}
+    .horiz__track{
+      width:auto;overflow-x:auto;scroll-snap-type:x mandatory;
+      padding-bottom:8px;-webkit-overflow-scrolling:touch;
+    }
+    .port-card{scroll-snap-align:center;}
+    .horiz__progress{display:none;}
+  }
   .port-card{
     background:linear-gradient(160deg, var(--panel), #0b0d0b);
     border:1px solid var(--panel-border);
     border-radius:var(--radius);
     overflow:hidden;
     display:flex;flex-direction:column;
+    flex:0 0 400px;max-width:400px;
+    transition:border-color .25s ease, transform .25s ease;
   }
+  @media(max-width:520px){.port-card{flex-basis:min(300px,80vw);}}
+  /* Ultima "tarjeta": el cierre de venta. Ademas alarga la pista, que es lo
+     que hace que el scroll horizontal tenga recorrido de verdad. */
+  .port-card.port-cta{
+    justify-content:center;text-align:center;padding:40px 30px;
+    background:linear-gradient(160deg,rgba(57,255,20,.10),#0b0d0b);
+    border-style:dashed;border-color:rgba(57,255,20,.35);
+  }
+  .port-cta h4{font-size:1.3rem;margin-bottom:10px;}
+  .port-cta p{color:var(--grey);font-size:.92rem;margin-bottom:22px;}
+  .port-card:hover{border-color:var(--neon);transform:translateY(-4px);}
   .port-thumb{
-    height:170px;
-    display:flex;align-items:center;justify-content:center;
-    font-family:'Space Grotesk',sans-serif;font-weight:700;font-size:1.4rem;
-    position:relative;
+    height:190px;position:relative;overflow:hidden;
+    background:var(--black);
   }
-  .port-thumb.sushi{background:linear-gradient(135deg,#111,#1c2a1a);color:var(--neon);}
-  .port-thumb.burger{background:linear-gradient(135deg,#1a1005,#241505);color:var(--gold);}
-  .port-thumb.mushi{background:linear-gradient(135deg,#0a1a14,#0b0f0c);color:#7fe0c4;}
+  /* Dos imagenes apiladas: la de OpenGraph (la tarjeta que ve el cliente al
+     compartir el sitio) y, al pasar el cursor, el hero del sitio real. */
+  .port-thumb img{
+    position:absolute;inset:0;width:100%;height:100%;
+    object-fit:cover;display:block;
+    transition:opacity .45s ease, transform .6s ease;
+  }
+  .port-thumb .port-hero{opacity:0;transform:scale(1.06);}
+  .port-card:hover .port-hero{opacity:1;transform:scale(1);}
+  .port-card:hover .port-og{opacity:0;}
+  .port-thumb::after{
+    content:"";position:absolute;inset:0;
+    background:linear-gradient(180deg,rgba(7,7,7,0) 45%,rgba(7,7,7,.85));
+  }
+  .port-badge{
+    position:absolute;left:14px;bottom:12px;z-index:2;
+    font-family:'Space Grotesk',sans-serif;font-weight:700;font-size:1.05rem;
+    color:var(--white);text-shadow:0 2px 12px rgba(0,0,0,.8);
+  }
+  .port-peek{
+    position:absolute;right:12px;top:12px;z-index:2;
+    font-size:.68rem;letter-spacing:.08em;text-transform:uppercase;
+    color:var(--black);background:var(--neon);
+    padding:4px 8px;border-radius:100px;font-weight:700;
+    opacity:0;transform:translateY(-4px);transition:opacity .25s ease,transform .25s ease;
+  }
+  .port-card:hover .port-peek{opacity:1;transform:translateY(0);}
+  @media(hover:none){
+    .port-thumb .port-hero,.port-peek{display:none;}
+  }
   .port-body{padding:22px 22px 26px;flex:1;display:flex;flex-direction:column;}
   .port-body h4{font-size:1.05rem;margin-bottom:8px;}
   .port-body p{color:var(--grey);font-size:.9rem;flex:1;margin-bottom:14px;}
@@ -482,15 +584,45 @@
   .step h4{font-size:1.02rem;margin-bottom:8px;}
   .step p{font-size:.87rem;color:var(--grey);}
 
-  /* VALUE PROPS */
+  /* VALUE PROPS — el "estallido" de tallos.
+     Inspirado en el hero de stripe.com, pasado a verde. Los tallos salen de
+     un origen abajo al centro; cuatro de ellos llevan una tarjeta en la punta
+     y el resto son decorativos. Al mover el cursor, los tallos se doblan como
+     hierba y las tarjetas viajan con su tallo. */
+  .burst{position:relative;min-height:640px;}
+  .burst__canvas{
+    position:absolute;inset:0;width:100%;height:100%;
+    display:block;pointer-events:none;
+  }
+  .burst__cards{position:absolute;inset:0;pointer-events:none;}
+  .burst__cards .value-card{pointer-events:auto;}
   .values{display:grid;grid-template-columns:repeat(4,1fr);gap:22px;}
-  @media(max-width:900px){.values{grid-template-columns:repeat(2,1fr);}}
-  @media(max-width:560px){.values{grid-template-columns:1fr;}}
   .value-card{
     padding:26px 20px;border-radius:var(--radius);
     background:var(--panel);border:1px solid rgba(255,255,255,.06);
     text-align:center;
   }
+  /* Modo estallido: las tarjetas se posicionan por JS en la punta de su tallo */
+  .burst .values{
+    display:block;position:absolute;inset:0;
+  }
+  .burst .value-card{
+    position:absolute;top:0;left:0;width:236px;
+    margin:0;
+    background:rgba(19,22,19,.82);
+    -webkit-backdrop-filter:blur(6px);backdrop-filter:blur(6px);
+    border-color:var(--panel-border);
+    box-shadow:0 18px 40px rgba(0,0,0,.55);
+    will-change:transform;
+  }
+  /* Sin JS, en movil o con motion reducido: rejilla de siempre, intacta. */
+  @media(max-width:900px),(prefers-reduced-motion:reduce){
+    .burst{min-height:0;}
+    .burst__canvas{display:none;}
+    .burst .values{display:grid;grid-template-columns:repeat(2,1fr);gap:22px;position:static;inset:auto;}
+    .burst .value-card{position:static;width:auto;box-shadow:none;backdrop-filter:none;background:var(--panel);transform:none!important;}
+  }
+  @media(max-width:560px){.burst .values,.values{grid-template-columns:1fr;}}
   .value-icon{
     width:52px;height:52px;border-radius:50%;
     background:rgba(57,255,20,.1);border:1px solid rgba(57,255,20,.3);
@@ -499,6 +631,39 @@
   }
   .value-card h4{font-size:1rem;margin-bottom:8px;}
   .value-card p{font-size:.87rem;color:var(--grey);}
+
+  /* COMPLEMENTOS — el desglose de lo que se puede sumar a cualquier paquete.
+     Transparencia de precio: es lo que evita la cotizacion sorpresa. */
+  .extras{margin-top:64px;}
+  .extras__head{text-align:center;max-width:640px;margin:0 auto 34px;}
+  .extras__head h3{font-size:clamp(1.3rem,2.4vw,1.7rem);margin-bottom:10px;}
+  .extras__head p{color:var(--grey);font-size:.95rem;}
+  .extras-grid{
+    display:grid;grid-template-columns:repeat(3,1fr);gap:14px;
+  }
+  @media(max-width:900px){.extras-grid{grid-template-columns:repeat(2,1fr);}}
+  @media(max-width:560px){.extras-grid{grid-template-columns:1fr;}}
+  .extra{
+    background:var(--panel);border:1px solid rgba(255,255,255,.07);
+    border-radius:var(--radius);padding:18px 18px 20px;
+    display:flex;flex-direction:column;gap:6px;
+    transition:border-color .2s ease,transform .2s ease;
+  }
+  .extra:hover{border-color:var(--panel-border);transform:translateY(-3px);}
+  .extra__top{display:flex;align-items:baseline;justify-content:space-between;gap:10px;}
+  .extra__nom{font-weight:600;font-size:.97rem;color:var(--white);}
+  .extra__precio{
+    flex:0 0 auto;font-family:'Space Grotesk',sans-serif;font-weight:700;
+    font-size:.9rem;color:var(--neon);white-space:nowrap;
+  }
+  .extra__precio small{display:block;font-size:.62rem;color:var(--grey);font-weight:400;letter-spacing:.04em;text-transform:uppercase;text-align:right;}
+  .extra p{color:var(--grey);font-size:.83rem;line-height:1.5;}
+  .extra--destacado{border-color:var(--panel-border);background:linear-gradient(160deg,rgba(57,255,20,.07),var(--panel));}
+  .extras-nota{
+    margin-top:26px;text-align:center;color:var(--grey);font-size:.85rem;
+    max-width:680px;margin-left:auto;margin-right:auto;
+  }
+  .extras-nota b{color:var(--white);}
 
   /* PRICING */
   .pricing-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:24px;}
@@ -670,7 +835,7 @@
           <a href="#contacto" class="btn btn-outline">Agendar asesoría gratuita</a>
         </div>
         <div class="hero-stats">
-          <div><b>3+</b>sitios en producción</div>
+          <div><b>4</b>sitios en producción</div>
           <div><b>100%</b>optimizados a celular</div>
           <div><b>0%</b>comisión por pedido</div>
         </div>
@@ -702,18 +867,38 @@
         <h3>Restaurantes y Alimentos</h3>
         <p>Menú digital interactivo, pedidos directos por WhatsApp/Web sin pagar comisiones a apps de delivery y optimización en Google Maps.</p>
         <span class="tag">Menú + carrito propio</span>
+        <div class="seg-ejemplos">
+          <b>Ejemplos en vivo</b>
+          <div class="seg-ej">
+            <a href="https://inusushi.github.io" target="_blank" rel="noopener">🍣 Inu Sushi</a>
+            <a href="https://inusushi.github.io/kangreburger.html" target="_blank" rel="noopener">🍔 Kangreburger</a>
+          </div>
+        </div>
       </div>
       <div class="seg-card">
         <span class="seg-icon">🛍️</span>
         <h3>Tiendas Físicas y Retail</h3>
         <p>Catálogo de productos, carrito de compras fácil de usar, integración de cobros (tarjeta/efectivo) y stock sincronizado.</p>
         <span class="tag">Catálogo + carrito</span>
+        <div class="seg-ejemplos">
+          <b>Ejemplos en vivo</b>
+          <div class="seg-ej">
+            <a href="https://inusushi.github.io/mushipan.html" target="_blank" rel="noopener">🥟 Mushipan</a>
+            <span class="pronto">Más ejemplos pronto</span>
+          </div>
+        </div>
       </div>
       <div class="seg-card">
         <span class="seg-icon">🛠️</span>
         <h3>Servicios Profesionales</h3>
-        <p>Páginas de aterrizaje diseñadas para captar leads, agenda de citas integrada y presentación clara de tus servicios.</p>
+        <p>Páginas de aterrizaje diseñadas para captar leads, contacto directo y presentación clara de tus servicios. La agenda de citas se suma como complemento.</p>
         <span class="tag">Leads + agenda</span>
+        <div class="seg-ejemplos">
+          <b>Ejemplos en vivo</b>
+          <div class="seg-ej">
+            <a href="https://inusushi.github.io/marcelfranco-art/" target="_blank" rel="noopener">🎸 Marcel Franco</a>
+          </div>
+        </div>
       </div>
     </div>
   </div>
@@ -753,16 +938,42 @@
 </section>
 
 <!-- PORTAFOLIO -->
-<section id="portafolio" class="section-alt">
-  <div class="container">
-    <div class="section-head">
-      <span class="eyebrow">Trabajo real, no maquetas</span>
-      <h2>Sitios que ya están en producción</h2>
-      <p>Estos son proyectos propios, en vivo hoy — puedes navegarlos tal como los navega un cliente real.</p>
+<section id="portafolio" class="section-alt" data-horiz>
+ <div class="horiz__sticky">
+  <div class="horiz__inner">
+    <div class="container">
+      <div class="section-head">
+        <span class="eyebrow">Trabajo real, no maquetas</span>
+        <h2>Sitios que ya están en producción</h2>
+        <p>En vivo hoy — pasa el cursor sobre cada uno para asomarte a su portada.</p>
+      </div>
     </div>
-    <div class="portfolio-grid">
+    <div class="horiz__track">
       <div class="port-card">
-        <div class="port-thumb sushi">🍣 Inu Sushi</div>
+        <div class="port-thumb">
+          <img class="port-og" src="portafolio/marcel-og.webp" alt="Tarjeta de Marcel Franco al compartir el sitio" width="1200" height="630" loading="lazy" decoding="async">
+          <img class="port-hero" src="portafolio/marcel-hero.webp" alt="Portada del sitio de Marcel Franco" width="1200" height="611" loading="lazy" decoding="async">
+          <span class="port-peek">Su portada</span>
+          <span class="port-badge">🎸 Marcel Franco</span>
+        </div>
+        <div class="port-body">
+          <h4>Marcel Franco — Músico y compositor</h4>
+          <p>Sitio de cliente: clases, conciertos, contrataciones y venta de libro.</p>
+          <ul>
+            <li>Cada botón abre WhatsApp con el mensaje ya escrito</li>
+            <li>Agenda de fechas que el propio artista actualiza</li>
+            <li>Sin backend: no recoge ni guarda datos personales</li>
+          </ul>
+          <a href="https://inusushi.github.io/marcelfranco-art/" target="_blank" rel="noopener" class="port-link">Ver sitio en vivo →</a>
+        </div>
+      </div>
+      <div class="port-card">
+        <div class="port-thumb">
+          <img class="port-og" src="portafolio/sushi-og.webp" alt="Tarjeta de Inu Sushi al compartir el sitio" width="1200" height="630" loading="lazy" decoding="async">
+          <img class="port-hero" src="portafolio/sushi-hero.webp" alt="Portada del sitio de Inu Sushi" width="1200" height="966" loading="lazy" decoding="async">
+          <span class="port-peek">Su portada</span>
+          <span class="port-badge">🍣 Inu Sushi</span>
+        </div>
         <div class="port-body">
           <h4>Inu Sushi — Dark Kitchen</h4>
           <p>Landing de venta directa con menú completo y carrito propio.</p>
@@ -775,7 +986,12 @@
         </div>
       </div>
       <div class="port-card">
-        <div class="port-thumb burger">🍔 Kangreburger</div>
+        <div class="port-thumb">
+          <img class="port-og" src="portafolio/burger-og.webp" alt="Tarjeta de Kangreburger al compartir el sitio" width="1200" height="630" loading="lazy" decoding="async">
+          <img class="port-hero" src="portafolio/burger-hero.webp" alt="Portada del sitio de Kangreburger" width="1200" height="1200" loading="lazy" decoding="async">
+          <span class="port-peek">Su portada</span>
+          <span class="port-badge">🍔 Kangreburger</span>
+        </div>
         <div class="port-body">
           <h4>Kangreburger — Landing hook</h4>
           <p>Sub-marca de comida rápida con su propio embudo de venta.</p>
@@ -788,7 +1004,12 @@
         </div>
       </div>
       <div class="port-card">
-        <div class="port-thumb mushi">🥟 Mushipan</div>
+        <div class="port-thumb">
+          <img class="port-og" src="portafolio/mushi-og.webp" alt="Tarjeta de Mushipan al compartir el sitio" width="1200" height="630" loading="lazy" decoding="async">
+          <img class="port-hero" src="portafolio/mushi-hero.webp" alt="Portada del sitio de Mushipan" width="1200" height="963" loading="lazy" decoding="async">
+          <span class="port-peek">Su portada</span>
+          <span class="port-badge">🥟 Mushipan</span>
+        </div>
         <div class="port-body">
           <h4>Mushipan — Captación B2B</h4>
           <p>Landing de servicios enfocada en reclutar distribuidores, no venta directa.</p>
@@ -800,9 +1021,18 @@
           <a href="https://inusushi.github.io/mushipan.html" target="_blank" rel="noopener" class="port-link">Ver sitio en vivo →</a>
         </div>
       </div>
+      <div class="port-card port-cta">
+        <h4>¿El siguiente es el tuyo?</h4>
+        <p>Cotizamos hoy mismo y te decimos con honestidad qué tipo de sitio necesita tu negocio — aunque sea el más sencillo.</p>
+        <a href="#contacto" class="btn btn-primary">Cotizar mi sitio</a>
+      </div>
     </div>
-    <p class="trust-note">Testimonios de clientes próximamente — esta sección se actualizará con casos y cifras reales conforme se recopilen.</p>
+    <div class="container">
+      <div class="horiz__progress"><i></i></div>
+      <p class="trust-note">Testimonios de clientes próximamente — esta sección se actualizará con casos y cifras reales conforme se recopilen.</p>
+    </div>
   </div>
+ </div>
 </section>
 
 <!-- VALUE PROPS -->
@@ -812,7 +1042,11 @@
       <span class="eyebrow">¿Por qué elegirnos?</span>
       <h2>Rápido, tuyo, y sin dejarte solo</h2>
     </div>
-    <div class="values">
+    <!-- El canvas dibuja los tallos; las tarjetas son HTML normal y JS las
+         coloca en la punta de su tallo. Sin JS quedan en rejilla y se lee todo. -->
+    <div class="burst" id="burst">
+      <canvas class="burst__canvas" id="burstCanvas" aria-hidden="true"></canvas>
+      <div class="values">
       <div class="value-card">
         <div class="value-icon">⚡</div>
         <h4>Entregas rápidas</h4>
@@ -833,6 +1067,7 @@
         <h4>Soporte y acompañamiento</h4>
         <p>No te dejamos solo tras la entrega — seguimos disponibles por WhatsApp.</p>
       </div>
+      </div>
     </div>
   </div>
 </section>
@@ -849,7 +1084,7 @@
       <div class="price-card">
         <h3>Menú Digital</h3>
         <p class="desde">Ideal para restaurantes y comida</p>
-        <div class="amount">$3,500<span> MXN</span></div>
+        <div class="amount">$6,500<span> MXN</span></div>
         <ul>
           <li>Menú digital interactivo</li>
           <li>Pedidos por WhatsApp sin comisión</li>
@@ -862,7 +1097,7 @@
         <span class="badge">Más pedido</span>
         <h3>Tienda Online</h3>
         <p class="desde">Ideal para retail y tiendas físicas</p>
-        <div class="amount">$3,500<span> MXN</span></div>
+        <div class="amount">$12,000<span> MXN</span></div>
         <ul>
           <li>Catálogo de productos</li>
           <li>Carrito de compras integrado</li>
@@ -877,7 +1112,7 @@
         <div class="amount">$3,500<span> MXN</span></div>
         <ul>
           <li>Landing enfocada en captar leads</li>
-          <li>Agenda de citas integrada</li>
+          <li>Botón de contacto directo por WhatsApp</li>
           <li>Presentación clara de servicios</li>
           <li>Formulario de contacto corto</li>
         </ul>
@@ -885,6 +1120,98 @@
       </div>
     </div>
     <p class="price-note">Precios desde $3,500 MXN — el alcance final (número de secciones, integraciones, idiomas) se confirma en tu cotización gratuita por WhatsApp.</p>
+
+    <!-- DESGLOSE DE COMPLEMENTOS
+         Cada uno se suma a cualquiera de los tres paquetes. Publicar el precio
+         es a proposito: evita la cotizacion sorpresa y filtra al cliente que
+         no iba a pagar la integracion cara. -->
+    <div class="extras">
+      <div class="extras__head">
+        <h3>Súmale solo lo que tu negocio necesite</h3>
+        <p>Cada paquete es la base. Estos complementos se cotizan aparte para que no pagues por algo que no vas a usar — y para que sepas el número antes de decidir.</p>
+      </div>
+
+      <div class="extras-grid">
+
+        <div class="extra extra--destacado">
+          <div class="extra__top">
+            <span class="extra__nom">📅 Agenda de citas o reservas</span>
+            <span class="extra__precio">$3,000<small>desde</small></span>
+          </div>
+          <p>Tus clientes eligen horario y reciben confirmación automática. Requiere calendario en tiempo real y control de choques de horario: es la integración más delicada de todas.</p>
+        </div>
+
+        <div class="extra extra--destacado">
+          <div class="extra__top">
+            <span class="extra__nom">💳 Cobros en línea</span>
+            <span class="extra__precio">$4,000<small>desde</small></span>
+          </div>
+          <p>Pago con tarjeta o transferencia dentro del sitio. Incluye alta de la pasarela y pruebas de cobro reales.</p>
+        </div>
+
+        <div class="extra">
+          <div class="extra__top">
+            <span class="extra__nom">⚙️ Panel autoadministrable</span>
+            <span class="extra__precio">$2,000<small>desde</small></span>
+          </div>
+          <p>Cambias precios, fotos, fechas o platillos tú mismo, sin tocar código y sin llamarnos.</p>
+        </div>
+
+        <div class="extra">
+          <div class="extra__top">
+            <span class="extra__nom">🎬 Video de portada</span>
+            <span class="extra__precio">$1,500<small>desde</small></span>
+          </div>
+          <p>Editamos tu material a un loop corto y ligero, optimizado para que no frene la carga.</p>
+        </div>
+
+        <div class="extra">
+          <div class="extra__top">
+            <span class="extra__nom">✨ Portada animada al hacer scroll</span>
+            <span class="extra__precio">$2,500<small>desde</small></span>
+          </div>
+          <p>La imagen se mueve conforme el visitante baja. Es lo que hace que un sitio se sienta caro.</p>
+        </div>
+
+        <div class="extra">
+          <div class="extra__top">
+            <span class="extra__nom">🎨 Diseño inmersivo a medida</span>
+            <span class="extra__precio">+40%<small>sobre el paquete</small></span>
+          </div>
+          <p>Tu sitio deja de parecerse a cualquier otro: animación, tipografía y color pensados solo para tu marca.</p>
+        </div>
+
+        <div class="extra">
+          <div class="extra__top">
+            <span class="extra__nom">✍️ Redacción de textos</span>
+            <span class="extra__precio">$2,000<small>desde</small></span>
+          </div>
+          <p>Si no tienes los textos listos, los escribimos nosotros con enfoque de venta.</p>
+        </div>
+
+        <div class="extra">
+          <div class="extra__top">
+            <span class="extra__nom">📸 Fotografía y retoque</span>
+            <span class="extra__precio">$2,000<small>desde</small></span>
+          </div>
+          <p>Preparamos tus fotos para web, o coordinamos una sesión si hace falta material nuevo.</p>
+        </div>
+
+        <div class="extra">
+          <div class="extra__top">
+            <span class="extra__nom">🌐 Dominio y correo profesional</span>
+            <span class="extra__precio">$800<small>desde</small></span>
+          </div>
+          <p>Tu propio <em>tunegocio.com</em> y correos <em>@tunegocio.com</em>, configurados y funcionando.</p>
+        </div>
+
+      </div>
+
+      <p class="extras-nota">
+        Todos los paquetes incluyen <b>dos rondas de cambios</b>; las siguientes se cotizan desde $800.
+        También ofrecemos <b>mantenimiento mensual desde $500</b> si prefieres que nosotros nos encarguemos de las actualizaciones.
+      </p>
+    </div>
   </div>
 </section>
 
@@ -1056,6 +1383,240 @@
         }, { rootMargin: '200px' }).observe(capa);
       })
       .catch(() => {});                          // sin conexion: silencio
+  })();
+
+  /* ===================================================================
+     PORTAFOLIO — scroll horizontal pinneado
+     Mismo patron que la seccion de trayectoria de marcelfranco.art:
+     la altura de la seccion se iguala al recorrido lateral, asi 1px de
+     scroll vertical = 1px lateral y el movimiento no acelera ni marea.
+     =================================================================== */
+  (function(){
+    var secciones = document.querySelectorAll('[data-horiz]');
+    if (!secciones.length) return;
+    var reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
+    var instancias = [];
+
+    function medir(){
+      instancias = [];
+      [].forEach.call(secciones, function(sec){
+        var pista = sec.querySelector('.horiz__track');
+        if (!pista) return;
+        // Bajo 900px el CSS lo convierte en carrusel nativo: no pinear.
+        if (innerWidth <= 900 || reduce){ sec.style.height = ''; pista.style.transform = ''; return; }
+        var recorrido = Math.max(0, pista.scrollWidth - innerWidth);
+        // Pinear cuesta una pantalla entera de scroll. Si el recorrido lateral
+        // no lo justifica (pantalla muy ancha), mejor carrusel libre: se ve
+        // igual de bien y no secuestra el scroll a cambio de 30px de viaje.
+        if (recorrido < 240){
+          sec.classList.add('horiz--libre');
+          sec.style.height = ''; pista.style.transform = '';
+          return;
+        }
+        sec.classList.remove('horiz--libre');
+        sec.style.height = (innerHeight + recorrido) + 'px';
+        instancias.push({
+          sec: sec, pista: pista, recorrido: recorrido,
+          barra: sec.querySelector('.horiz__progress i')
+        });
+      });
+    }
+
+    function pintar(){
+      instancias.forEach(function(o){
+        var r = o.sec.getBoundingClientRect();
+        var p = o.recorrido === 0 ? 0 : Math.min(1, Math.max(0, -r.top / o.recorrido));
+        o.pista.style.transform = 'translate3d(' + (-p * o.recorrido) + 'px,0,0)';
+        if (o.barra) o.barra.style.width = (p * 100) + '%';
+      });
+    }
+
+    var esperando = false;
+    addEventListener('scroll', function(){
+      if (esperando) return;
+      esperando = true;
+      requestAnimationFrame(function(){ pintar(); esperando = false; });
+    }, { passive:true });
+
+    var t;
+    addEventListener('resize', function(){
+      clearTimeout(t);
+      t = setTimeout(function(){ medir(); pintar(); }, 150);
+    });
+
+    medir(); pintar();
+    addEventListener('load', function(){ medir(); pintar(); });
+    window.InuPortafolio = { refresh: function(){ medir(); pintar(); return instancias.length; } };
+  })();
+
+  /* ===================================================================
+     "POR QUE ELEGIRNOS" — el estallido de tallos
+     Version propia del hero de stripe.com, en verde. Los tallos salen de
+     un origen abajo al centro y se abren en abanico. Cuatro de ellos son
+     "portadores": llevan una tarjeta en la punta. Al mover el cursor los
+     tallos se doblan como hierba, y la tarjeta viaja con su tallo.
+     =================================================================== */
+  (function(){
+    var caja = document.getElementById('burst');
+    var cv = document.getElementById('burstCanvas');
+    if (!caja || !cv) return;
+    var reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
+    var tarjetas = [].slice.call(caja.querySelectorAll('.value-card'));
+    var ctx = cv.getContext('2d');
+
+    var DECOR = 190;          // tallos decorativos
+    var tallos = [], w = 0, h = 0, dpr = 1;
+    var raton = { x: 0, y: 0, dentro: false };
+    var activo = false, corriendo = false;
+
+    function apagar(){
+      corriendo = false;
+      ctx && ctx.clearRect(0, 0, cv.width, cv.height);
+      tarjetas.forEach(function(t){ t.style.transform = ''; t.style.left = ''; t.style.top = ''; });
+    }
+
+    function construir(){
+      activo = innerWidth > 900 && !reduce;
+      if (!activo) { apagar(); return; }
+
+      var r = caja.getBoundingClientRect();
+      w = r.width; h = r.height;
+      dpr = Math.min(devicePixelRatio || 1, 2);
+      cv.width = w * dpr; cv.height = h * dpr;
+      ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+
+      // Origen: abajo al centro, un poco por debajo del borde.
+      var ox = w / 2, oy = h + 40;
+      tallos = [];
+
+      // Las cuatro tarjetas se reparten el ancho util y suben a distinta
+      // altura para que el abanico no parezca una fila.
+      var anchoT = 236, margen = 40;
+      var util = Math.min(w - margen * 2, 1100);
+      var x0 = (w - util) / 2 + anchoT / 2;
+      var paso = (util - anchoT) / 3;
+      var alturas = [0.30, 0.16, 0.16, 0.30];   // fraccion de h desde arriba
+
+      tarjetas.forEach(function(el, i){
+        var tx = x0 + paso * i;
+        var ty = h * alturas[i] + el.offsetHeight / 2;
+        tallos.push({
+          ox: ox, oy: oy, x: tx, y: ty,
+          bx: tx, by: ty, vx: 0, vy: 0,
+          grosor: 1.6, punto: 4.5, alfa: .85,
+          card: el
+        });
+      });
+
+      // Decorativos: abanico completo, longitudes y opacidades variadas.
+      for (var j = 0; j < DECOR; j++){
+        var a = (-Math.PI * 0.5) + (Math.random() - 0.5) * Math.PI * 1.06;
+        var largo = (h + 60) * (0.35 + Math.pow(Math.random(), 0.7) * 0.72);
+        var px = ox + Math.cos(a) * largo * 1.25;
+        var py = oy + Math.sin(a) * largo;
+        tallos.push({
+          ox: ox, oy: oy, x: px, y: py,
+          bx: px, by: py, vx: 0, vy: 0,
+          grosor: Math.random() < .28 ? 1.1 : 0.6,
+          punto: Math.random() < .28 ? 2.4 : 1.5,
+          alfa: 0.12 + Math.random() * 0.4,
+          card: null
+        });
+      }
+      colocar();
+    }
+
+    // Coloca cada tarjeta en la punta de su tallo (centro de la tarjeta).
+    function colocar(){
+      tallos.forEach(function(s){
+        if (!s.card) return;
+        s.card.style.left = '0px';
+        s.card.style.top = '0px';
+        s.card.style.transform =
+          'translate3d(' + (s.x - s.card.offsetWidth / 2) + 'px,' +
+                           (s.y - s.card.offsetHeight / 2) + 'px,0)';
+      });
+    }
+
+    function marco(){
+      if (!corriendo) return;
+      ctx.clearRect(0, 0, w, h);
+
+      for (var i = 0; i < tallos.length; i++){
+        var s = tallos[i];
+
+        // Empuje del cursor: cae con la distancia. Los tallos portadores se
+        // mueven menos, para que el texto no se vuelva ilegible.
+        var ex = 0, ey = 0;
+        if (raton.dentro){
+          var dx = s.bx - raton.x, dy = s.by - raton.y;
+          var d = Math.sqrt(dx*dx + dy*dy) || 1;
+          var radio = 320;
+          if (d < radio){
+            var fuerza = (1 - d / radio);
+            fuerza = fuerza * fuerza * (s.card ? 26 : 62);
+            ex = (dx / d) * fuerza;
+            ey = (dy / d) * fuerza;
+          }
+        }
+
+        // Muelle hacia la posicion de reposo + empuje. Da el rebote.
+        var destinoX = s.bx + ex, destinoY = s.by + ey;
+        s.vx = (s.vx + (destinoX - s.x) * 0.055) * 0.82;
+        s.vy = (s.vy + (destinoY - s.y) * 0.055) * 0.82;
+        s.x += s.vx; s.y += s.vy;
+
+        // El tallo se dibuja curvo: el punto de control se desplaza con el
+        // empuje, asi la linea se DOBLA en vez de solo estirarse.
+        var cx = (s.ox + s.x) / 2 + ex * 0.55;
+        var cy = (s.oy + s.y) / 2 + ey * 0.55;
+
+        ctx.beginPath();
+        ctx.moveTo(s.ox, s.oy);
+        ctx.quadraticCurveTo(cx, cy, s.x, s.y);
+        ctx.strokeStyle = 'rgba(57,255,20,' + s.alfa + ')';
+        ctx.lineWidth = s.grosor;
+        ctx.stroke();
+
+        ctx.beginPath();
+        ctx.arc(s.x, s.y, s.punto, 0, Math.PI * 2);
+        ctx.fillStyle = 'rgba(57,255,20,' + Math.min(1, s.alfa + .25) + ')';
+        ctx.fill();
+      }
+
+      colocar();
+      requestAnimationFrame(marco);
+    }
+
+    function arrancar(){ if (activo && !corriendo){ corriendo = true; requestAnimationFrame(marco); } }
+
+    caja.addEventListener('pointermove', function(e){
+      var r = caja.getBoundingClientRect();
+      raton.x = e.clientX - r.left;
+      raton.y = e.clientY - r.top;
+      raton.dentro = true;
+    });
+    caja.addEventListener('pointerleave', function(){ raton.dentro = false; });
+
+    var t2;
+    addEventListener('resize', function(){
+      clearTimeout(t2);
+      t2 = setTimeout(function(){ construir(); }, 150);
+    });
+
+    // Solo se anima cuando la seccion esta a la vista: no gasta bateria.
+    construir();
+    if ('IntersectionObserver' in window){
+      new IntersectionObserver(function(ens){
+        ens.forEach(function(en){
+          if (en.isIntersecting) arrancar();
+          else corriendo = false;
+        });
+      }, { rootMargin: '120px' }).observe(caja);
+    } else { arrancar(); }
+
+    addEventListener('load', function(){ construir(); });
+    window.InuBurst = { refresh: construir, tallos: function(){ return tallos.length; } };
   })();
 </script>
 
