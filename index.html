@@ -615,14 +615,35 @@
     box-shadow:0 18px 40px rgba(0,0,0,.55);
     will-change:transform;
   }
-  /* Sin JS, en movil o con motion reducido: rejilla de siempre, intacta. */
-  @media(max-width:900px),(prefers-reduced-motion:reduce){
+  /* MOVIL: las tarjetas vuelven al flujo normal (apilarlas es lo legible),
+     pero los tallos SIGUEN AHI, detras, cayendo desde arriba. El JS les da
+     a las tarjetas un desplazamiento pequeno para que se muevan con su tallo
+     sin dejar de ser legibles. */
+  @media(max-width:900px){
+    .burst{min-height:0;}
+    .burst .values{
+      display:grid;grid-template-columns:repeat(2,1fr);gap:22px;
+      position:static;inset:auto;
+      padding-top:70px;              /* aire para que se vea nacer el tallo */
+    }
+    .burst .value-card{
+      position:static;width:auto;margin:0;
+      box-shadow:0 12px 30px rgba(0,0,0,.45);
+      will-change:transform;
+    }
+    .burst__cards{position:static;inset:auto;}
+  }
+  @media(max-width:560px){
+    .burst .values,.values{grid-template-columns:1fr;}
+    .burst .values{padding-top:56px;}
+  }
+  /* Sin animacion: rejilla de siempre, intacta y sin canvas. */
+  @media(prefers-reduced-motion:reduce){
     .burst{min-height:0;}
     .burst__canvas{display:none;}
-    .burst .values{display:grid;grid-template-columns:repeat(2,1fr);gap:22px;position:static;inset:auto;}
+    .burst .values{display:grid;grid-template-columns:repeat(2,1fr);gap:22px;position:static;inset:auto;padding-top:0;}
     .burst .value-card{position:static;width:auto;box-shadow:none;backdrop-filter:none;background:var(--panel);transform:none!important;}
   }
-  @media(max-width:560px){.burst .values,.values{grid-template-columns:1fr;}}
   .value-icon{
     width:52px;height:52px;border-radius:50%;
     background:rgba(57,255,20,.1);border:1px solid rgba(57,255,20,.3);
@@ -1464,10 +1485,11 @@
     var tarjetas = [].slice.call(caja.querySelectorAll('.value-card'));
     var ctx = cv.getContext('2d');
 
-    var DECOR = 190;          // tallos decorativos
     var tallos = [], w = 0, h = 0, dpr = 1;
     var raton = { x: 0, y: 0, dentro: false };
-    var activo = false, corriendo = false;
+    var activo = false, corriendo = false, movil = false;
+    var viento = 0;           // empuje lateral que deja el scroll (solo movil)
+    var yPrev = 0;
 
     function apagar(){
       corriendo = false;
@@ -1476,88 +1498,154 @@
     }
 
     function construir(){
-      activo = innerWidth > 900 && !reduce;
+      // En movil TAMBIEN se dibuja: solo lo apaga el motion reducido.
+      activo = !reduce;
+      movil = innerWidth <= 900;
       if (!activo) { apagar(); return; }
+
+      // Limpiar antes de medir: en movil la posicion de reposo se lee del
+      // layout real, y si la tarjeta sigue desplazada se mide corrida.
+      tarjetas.forEach(function(t){ t.style.transform = ''; t.style.left = ''; t.style.top = ''; });
 
       var r = caja.getBoundingClientRect();
       w = r.width; h = r.height;
+      if (!w || !h) return;
       dpr = Math.min(devicePixelRatio || 1, 2);
       cv.width = w * dpr; cv.height = h * dpr;
       ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
-
-      // Origen: abajo al centro, un poco por debajo del borde.
-      var ox = w / 2, oy = h + 40;
       tallos = [];
 
-      // Las cuatro tarjetas se reparten el ancho util y suben a distinta
-      // altura para que el abanico no parezca una fila.
-      var anchoT = 236, margen = 40;
-      var util = Math.min(w - margen * 2, 1100);
-      var x0 = (w - util) / 2 + anchoT / 2;
-      var paso = (util - anchoT) / 3;
-      var alturas = [0.30, 0.16, 0.16, 0.30];   // fraccion de h desde arriba
+      // Menos tallos en movil: es la mitad de ancho y el doble de sensible
+      // a la bateria.
+      var DECOR = movil ? 70 : 190;
+      var ox, oy;
 
-      tarjetas.forEach(function(el, i){
-        var tx = x0 + paso * i;
-        var ty = h * alturas[i] + el.offsetHeight / 2;
-        tallos.push({
-          ox: ox, oy: oy, x: tx, y: ty,
-          bx: tx, by: ty, vx: 0, vy: 0,
-          grosor: 1.6, punto: 4.5, alfa: .85,
-          card: el
+      if (movil){
+        // ORIGEN ARRIBA. Las tarjetas van apiladas en su sitio normal, asi
+        // que los tallos CAEN desde el borde superior y cada tarjeta cuelga
+        // del suyo. La posicion de reposo se lee del layout real.
+        ox = w / 2; oy = -20;
+        tarjetas.forEach(function(el){
+          var b = el.getBoundingClientRect();
+          var tx = (b.left - r.left) + b.width / 2;
+          var ty = (b.top - r.top) + Math.min(34, b.height / 2);
+          tallos.push({
+            ox: ox, oy: oy, x: tx, y: ty,
+            bx: tx, by: ty, vx: 0, vy: 0,
+            grosor: 1.4, punto: 3.6, alfa: .8,
+            card: el
+          });
         });
-      });
+        // Decorativos: abanico hacia ABAJO.
+        for (var m = 0; m < DECOR; m++){
+          var am = (Math.PI * 0.5) + (Math.random() - 0.5) * Math.PI * 0.9;
+          var lm = (h + 40) * (0.25 + Math.pow(Math.random(), 0.8) * 0.7);
+          tallos.push(crearDecor(ox, oy, ox + Math.cos(am) * lm * 0.85, oy + Math.sin(am) * lm));
+        }
 
-      // Decorativos: abanico completo, longitudes y opacidades variadas.
-      for (var j = 0; j < DECOR; j++){
-        var a = (-Math.PI * 0.5) + (Math.random() - 0.5) * Math.PI * 1.06;
-        var largo = (h + 60) * (0.35 + Math.pow(Math.random(), 0.7) * 0.72);
-        var px = ox + Math.cos(a) * largo * 1.25;
-        var py = oy + Math.sin(a) * largo;
-        tallos.push({
-          ox: ox, oy: oy, x: px, y: py,
-          bx: px, by: py, vx: 0, vy: 0,
-          grosor: Math.random() < .28 ? 1.1 : 0.6,
-          punto: Math.random() < .28 ? 2.4 : 1.5,
-          alfa: 0.12 + Math.random() * 0.4,
-          card: null
+      } else {
+        // ORIGEN ABAJO. Las cuatro tarjetas se reparten el ancho util y suben
+        // a distinta altura para que el abanico no parezca una fila.
+        ox = w / 2; oy = h + 40;
+        var anchoT = 236, margen = 40;
+        var util = Math.min(w - margen * 2, 1100);
+        var x0 = (w - util) / 2 + anchoT / 2;
+        var paso = (util - anchoT) / 3;
+        var alturas = [0.30, 0.16, 0.16, 0.30];
+
+        tarjetas.forEach(function(el, i){
+          var tx = x0 + paso * i;
+          var ty = h * alturas[i] + el.offsetHeight / 2;
+          tallos.push({
+            ox: ox, oy: oy, x: tx, y: ty,
+            bx: tx, by: ty, vx: 0, vy: 0,
+            grosor: 1.6, punto: 4.5, alfa: .85,
+            card: el
+          });
         });
+        for (var j = 0; j < DECOR; j++){
+          var a = (-Math.PI * 0.5) + (Math.random() - 0.5) * Math.PI * 1.06;
+          var largo = (h + 60) * (0.35 + Math.pow(Math.random(), 0.7) * 0.72);
+          tallos.push(crearDecor(ox, oy, ox + Math.cos(a) * largo * 1.25, oy + Math.sin(a) * largo));
+        }
       }
       colocar();
     }
 
-    // Coloca cada tarjeta en la punta de su tallo (centro de la tarjeta).
+    function crearDecor(ox, oy, px, py){
+      return {
+        ox: ox, oy: oy, x: px, y: py,
+        bx: px, by: py, vx: 0, vy: 0,
+        grosor: Math.random() < .28 ? 1.1 : 0.6,
+        punto: Math.random() < .28 ? 2.4 : 1.5,
+        alfa: 0.12 + Math.random() * 0.4,
+        card: null
+      };
+    }
+
+    // Escritorio: la tarjeta SE COLOCA en la punta del tallo.
+    // Movil: la tarjeta se queda donde el layout la puso y solo se DESPLAZA
+    // un poco siguiendo a su tallo, para que no se vuelva ilegible.
     function colocar(){
-      tallos.forEach(function(s){
-        if (!s.card) return;
-        s.card.style.left = '0px';
-        s.card.style.top = '0px';
-        s.card.style.transform =
-          'translate3d(' + (s.x - s.card.offsetWidth / 2) + 'px,' +
-                           (s.y - s.card.offsetHeight / 2) + 'px,0)';
-      });
+      for (var i = 0; i < tallos.length; i++){
+        var s = tallos[i];
+        if (!s.card) continue;
+        if (movil){
+          var dx = Math.max(-14, Math.min(14, s.x - s.bx));
+          var dy = Math.max(-10, Math.min(10, s.y - s.by));
+          s.card.style.left = '';
+          s.card.style.top = '';
+          s.card.style.transform = 'translate3d(' + dx.toFixed(1) + 'px,' + dy.toFixed(1) + 'px,0)';
+        } else {
+          s.card.style.left = '0px';
+          s.card.style.top = '0px';
+          s.card.style.transform =
+            'translate3d(' + (s.x - s.card.offsetWidth / 2) + 'px,' +
+                             (s.y - s.card.offsetHeight / 2) + 'px,0)';
+        }
+      }
     }
 
     function marco(){
       if (!corriendo) return;
+      unMarco();
+      requestAnimationFrame(marco);
+    }
+
+    // Un solo fotograma, sin agendar el siguiente. Existe aparte para poder
+    // auditar el motor a mano (InuBurst.paso()) cuando rAF esta suspendido:
+    // el pane de vista previa no compone frames si no esta visible, y todo
+    // parece congelado sin que haya ningun fallo.
+    function unMarco(){
       ctx.clearRect(0, 0, w, h);
 
       for (var i = 0; i < tallos.length; i++){
         var s = tallos[i];
 
-        // Empuje del cursor: cae con la distancia. Los tallos portadores se
-        // mueven menos, para que el texto no se vuelva ilegible.
+        // Empuje del cursor (o del dedo): cae con la distancia. Los tallos
+        // portadores se mueven menos, para que el texto no se vuelva ilegible.
         var ex = 0, ey = 0;
         if (raton.dentro){
           var dx = s.bx - raton.x, dy = s.by - raton.y;
           var d = Math.sqrt(dx*dx + dy*dy) || 1;
-          var radio = 320;
+          // En movil el radio tiene que cubrir la tarjeta entera: mide 350px
+          // de ancho, asi que con un radio corto el dedo casi nunca alcanza
+          // al tallo y no se mueve nada.
+          var radio = movil ? 300 : 320;
           if (d < radio){
             var fuerza = (1 - d / radio);
-            fuerza = fuerza * fuerza * (s.card ? 26 : 62);
+            fuerza = fuerza * fuerza * (s.card ? (movil ? 44 : 26) : 62);
             ex = (dx / d) * fuerza;
             ey = (dy / d) * fuerza;
           }
+        }
+
+        // En movil casi nadie va a arrastrar el dedo sobre la seccion: lo que
+        // si hace todo el mundo es SCROLLEAR. El scroll deja un empuje lateral
+        // que mece los tallos, mas fuerte cuanto mas lejos estan del origen.
+        if (movil && viento){
+          var lejania = Math.min(1, Math.abs(s.by - s.oy) / (h || 1));
+          ex += viento * lejania * (s.card ? 0.5 : 1);
         }
 
         // Muelle hacia la posicion de reposo + empuje. Da el rebote.
@@ -1584,8 +1672,10 @@
         ctx.fill();
       }
 
+      viento *= 0.92;                       // el meneo se apaga solo
+      if (Math.abs(viento) < 0.05) viento = 0;
+
       colocar();
-      requestAnimationFrame(marco);
     }
 
     function arrancar(){ if (activo && !corriendo){ corriendo = true; requestAnimationFrame(marco); } }
@@ -1597,6 +1687,18 @@
       raton.dentro = true;
     });
     caja.addEventListener('pointerleave', function(){ raton.dentro = false; });
+    // En tactil el dedo se levanta y no hay "leave": hay que soltarlo a mano.
+    caja.addEventListener('pointercancel', function(){ raton.dentro = false; });
+    caja.addEventListener('pointerup', function(){ if (movil) raton.dentro = false; });
+
+    // Meneo por scroll. Pasivo: no bloquea el desplazamiento de la pagina.
+    yPrev = scrollY;
+    addEventListener('scroll', function(){
+      if (!movil || !corriendo) { yPrev = scrollY; return; }
+      var d = scrollY - yPrev;
+      yPrev = scrollY;
+      viento = Math.max(-44, Math.min(44, viento + d * 0.7));
+    }, { passive: true });
 
     var t2;
     addEventListener('resize', function(){
@@ -1616,7 +1718,19 @@
     } else { arrancar(); }
 
     addEventListener('load', function(){ construir(); });
-    window.InuBurst = { refresh: construir, tallos: function(){ return tallos.length; } };
+    window.InuBurst = {
+      refresh: construir,
+      tallos: function(){ return tallos.length; },
+      // Auditoria manual (ver comentario de unMarco):
+      //   InuBurst.empuje(x, y)  simula el cursor/dedo dentro de la seccion
+      //   InuBurst.sopla(30)     simula el meneo que deja el scroll
+      //   InuBurst.paso(60)      corre 60 fotogramas de golpe
+      paso: function(n){ for (var i = 0; i < (n || 1); i++) unMarco(); return true; },
+      empuje: function(x, y){ raton.x = x; raton.y = y; raton.dentro = true; },
+      suelta: function(){ raton.dentro = false; },
+      sopla: function(v){ viento = v; },
+      estado: function(){ return { movil: movil, activo: activo, viento: +viento.toFixed(2) }; }
+    };
   })();
 </script>
 
